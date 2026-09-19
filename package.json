@@ -1,0 +1,34 @@
+{
+  "name": "issue-reporting-system",
+  "version": "1.0.0",
+  "description": "A web-based system for reporting and managing issues.",
+  "homepage": "https://github.com/svedit2024-maker/isssue-reporting-system-#readme",
+  "bugs": {
+    "url": "https://github.com/svedit2024-maker/isssue-reporting-system-/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/svedit2024-maker/isssue-reporting-system-.git"
+  },
+  "license": "MIT",
+  "author": "Vedhaanthsri S",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.11.0",
+    "dotenv": "^18.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.10.1",
+    "multer": "^2.4.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
