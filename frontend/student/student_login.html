@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="marvel.png">
+    <title>Student Login</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.65)
+        ),
+        url("../student/spiderman-bg2.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Login Card */
+
+.login-card {
+    width: 420px;
+    max-width: 100%;
+
+    padding: 42px 40px;
+
+    background: rgba(20, 20, 20, 0.68);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    border-radius: 22px;
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    color: white;
+}
+
+/* Heading */
+
+.login-card h1 {
+    text-align: center;
+
+    font-size: 32px;
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+
+    color: #cfcfcf;
+
+    font-size: 15px;
+
+    margin-bottom: 32px;
+}
+
+/* Input */
+
+.input-group {
+    margin-bottom: 22px;
+}
+
+.input-group label {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    margin-bottom: 8px;
+
+    color: #eeeeee;
+}
+
+.input-group input {
+    width: 100%;
+
+    height: 50px;
+
+    padding: 0 15px;
+
+    border: 1px solid rgba(255, 255, 255, 0.22);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.09);
+
+    color: white;
+
+    font-size: 15px;
+
+    transition: 0.25s;
+}
+
+.input-group input::placeholder {
+    color: #bcbcbc;
+}
+
+.input-group input:focus {
+    border-color: #e3262e;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    box-shadow: 0 0 0 3px rgba(227, 38, 46, 0.15);
+}
+
+/* Password */
+
+.password-label {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 8px;
+}
+
+.password-label label {
+    margin-bottom: 0;
+}
+
+.password-label a {
+    color: #ff5b61;
+
+    text-decoration: none;
+
+    font-size: 13px;
+}
+
+.password-label a:hover {
+    text-decoration: underline;
+}
+
+.password-box {
+    position: relative;
+}
+
+.password-box input {
+    padding-right: 50px;
+}
+
+.eye-btn {
+    position: absolute;
+
+    right: 8px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 38px;
+    height: 38px;
+
+    border: none;
+
+    background: transparent;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    border-radius: 8px;
+}
+
+.eye-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Login Button */
+
+.login-btn {
+    width: 100%;
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #e3262e;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.login-btn:hover {
+    background: #c91d25;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 8px 20px rgba(227, 38, 46, 0.3);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+/* Divider */
+
+.divider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 25px 0;
+
+    color: #aaa;
+
+    font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* Google */
+
+.google-btn {
+    width: 100%;
+
+    height: 50px;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    transition: 0.25s;
+}
+
+.google-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.google-icon {
+    width: 23px;
+    height: 23px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    color: #4285f4;
+
+    border-radius: 50%;
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+/* Register */
+
+.register-text {
+    text-align: center;
+
+    margin-top: 25px;
+
+    color: #c7c7c7;
+
+    font-size: 14px;
+}
+
+.register-text a {
+    color: #ff5b61;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.register-text a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+
+    .page {
+        padding: 20px;
+    }
+
+    .login-card {
+        padding: 32px 25px;
+    }
+
+    .login-card h1 {
+        font-size: 27px;
+    }
+}
+    </style>    
+</head>
+
+<body>
+
+    <div class="page">
+
+        <div class="login-card">
+
+            <h1>Student Login</h1>
+            <p class="subtitle">Welcome back, student</p>
+
+            <form id="login-form">
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+                    <div class="password-label">
+                        <label for="password">Password</label>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+
+                    <div class="password-box">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="eye-btn"
+                            id="togglePassword"
+                        >
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <button type="button" class="google-btn" id="googleLoginBtn">
+                <span class="google-icon">G</span>
+                Continue with Google
+            </button>
+
+            <p class="register-text">
+                Don't have an account?
+                <a href="/student/student_register.html">Create Account</a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="../JS/register.js"></script>
+
+    <script>
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        togglePassword.addEventListener("click", () => {
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                togglePassword.textContent = "🙈";
+            } else {
+                passwordInput.type = "password";
+                togglePassword.textContent = "👁";
+            }
+
+        });
+    </script>
+
+</body>
+</html>

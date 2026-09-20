@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+     <link rel="icon" type="image/png" href="marvel.png">
+
+    <title>Student Register | Campus Insight</title>
+
+
+    <style>
+
+        /* =========================
+           RESET
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =========================
+           BODY
+        ========================= */
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background: #050b12;
+        }
+
+
+        /* =========================
+           REGISTER PAGE
+        ========================= */
+
+        .register-page {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-end;
+
+            padding: 40px 8%;
+
+            position: relative;
+
+            background-image: url("spiderman-bg.jpg");
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-repeat: no-repeat;
+        }
+
+
+        /* =========================
+           IMAGE OVERLAY
+        ========================= */
+
+        .overlay {
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 8, 13, 0.10) 0%,
+                    rgba(3, 8, 13, 0.20) 40%,
+                    rgba(3, 8, 13, 0.75) 100%
+                );
+        }
+
+
+        /* =========================
+           REGISTER CARD
+        ========================= */
+
+        .register-card {
+
+            position: relative;
+
+            z-index: 2;
+
+            width: 390px;
+
+            padding: 38px 36px;
+
+            border: 1px solid
+                rgba(255, 255, 255, 0.16);
+
+            border-radius: 20px;
+
+            background:
+                rgba(10, 15, 22, 0.78);
+
+            backdrop-filter: blur(16px);
+
+            -webkit-backdrop-filter: blur(16px);
+
+            box-shadow:
+                0 25px 70px
+                rgba(0, 0, 0, 0.45);
+
+            color: white;
+        }
+
+
+        /* =========================
+           LOGO
+        ========================= */
+
+        .logo {
+
+            width: 48px;
+
+            height: 48px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 20px;
+
+            border-radius: 12px;
+
+            background: white;
+
+            color: #111827;
+
+            font-size: 15px;
+
+            font-weight: 800;
+        }
+
+
+        /* =========================
+           TITLE
+        ========================= */
+
+        .eyebrow {
+
+            color: #d1d5db;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 9px;
+        }
+
+
+        h1 {
+
+            font-size: 31px;
+
+            line-height: 1.1;
+
+            margin-bottom: 10px;
+        }
+
+
+        .subtitle {
+
+            color: #b8c0ca;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            margin-bottom: 28px;
+        }
+
+
+        /* =========================
+           INPUT GROUP
+        ========================= */
+
+        .input-group {
+
+            margin-bottom: 19px;
+        }
+
+
+        .input-group label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #e5e7eb;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           NORMAL INPUT
+        ========================= */
+
+        input {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid
+                rgba(255, 255, 255, 0.17);
+
+            border-radius: 9px;
+
+            outline: none;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+
+            color: white;
+
+            font-size: 13px;
+
+            transition: 0.2s;
+        }
+
+
+        input::placeholder {
+
+            color: #89929d;
+        }
+
+
+        input:focus {
+
+            border-color:
+                rgba(255, 255, 255, 0.55);
+
+            background:
+                rgba(255, 255, 255, 0.11);
+        }
+
+
+        /* =========================
+           PASSWORD BOX
+        ========================= */
+
+        .password-box {
+
+            position: relative;
+
+            width: 100%;
+        }
+
+
+        .password-box input {
+
+            padding-right: 48px;
+        }
+
+
+        /* =========================
+           EYE BUTTON
+        ========================= */
+
+        .eye-btn {
+
+            position: absolute;
+
+            right: 10px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 32px;
+
+            height: 32px;
+
+            border: none;
+
+            background: transparent;
+
+            color: #9ca3af;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 6px;
+
+            font-size: 17px;
+        }
+
+
+        .eye-btn:hover {
+
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+
+        /* =========================
+           REGISTER BUTTON
+        ========================= */
+
+        .register-btn {
+
+            width: 100%;
+
+            border: none;
+
+            border-radius: 9px;
+
+            padding: 13px;
+
+            background: white;
+
+            color: #111827;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .register-btn:hover {
+
+            transform: translateY(-1px);
+
+            background: #eeeeee;
+        }
+
+
+        /* =========================
+           DIVIDER
+        ========================= */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 22px 0;
+
+            color: #7f8790;
+
+            font-size: 10px;
+        }
+
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            height: 1px;
+
+            flex: 1;
+
+            background:
+                rgba(255, 255, 255, 0.14);
+        }
+
+
+        /* =========================
+           GOOGLE BUTTON
+        ========================= */
+
+        .google-btn {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            padding: 12px;
+
+            border: 1px solid
+                rgba(255, 255, 255, 0.17);
+
+            border-radius: 9px;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .google-btn:hover {
+
+            background:
+                rgba(255, 255, 255, 0.11);
+        }
+
+
+        .google-icon {
+
+            width: 20px;
+
+            height: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: white;
+
+            color: #4285f4;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+
+        /* =========================
+           LOGIN LINK
+        ========================= */
+
+        .login-text {
+
+            margin-top: 24px;
+
+            text-align: center;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+        }
+
+
+        .login-text a {
+
+            color: white;
+
+            font-weight: 600;
+
+            text-decoration: none;
+        }
+
+
+        .login-text a:hover {
+
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           STUDENT PORTAL
+        ========================= */
+
+        .student-note {
+
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: #68717c;
+
+            font-size: 10px;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .register-page {
+
+                justify-content: center;
+
+                padding: 25px;
+
+                background-position: 58% center;
+            }
+
+
+            .overlay {
+
+                background:
+                    rgba(3, 8, 13, 0.62);
+            }
+        }
+
+
+        @media (max-width: 480px) {
+
+            .register-page {
+
+                padding: 18px;
+            }
+
+
+            .register-card {
+
+                width: 100%;
+
+                padding: 30px 24px;
+            }
+
+
+            h1 {
+
+                font-size: 27px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         REGISTER PAGE
+    ========================== -->
+
+    <main class="register-page">
+
+
+        <!-- Background Overlay -->
+
+        <div class="overlay"></div>
+
+
+        <!-- =========================
+             REGISTER CARD
+        ========================== -->
+
+        <section class="register-card">
+
+
+            <!-- Logo -->
+
+            <div class="logo">
+                CI
+            </div>
+
+
+            <!-- Heading -->
+
+            <p class="eyebrow">
+                CAMPUS INSIGHT
+            </p>
+
+
+            <h1>
+                Create Account
+            </h1>
+
+
+            <p class="subtitle">
+                Create your student account to report and track campus issues.
+            </p>
+
+
+            <!-- =========================
+                 REGISTER FORM
+            ========================== -->
+
+            <form id="register-form">
+
+
+                <!-- NAME -->
+
+                <div class="input-group">
+
+                    <label for="name">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="input-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your college email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="input-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+
+                    <div class="password-box">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+
+                        <button
+                            type="button"
+                            class="eye-btn"
+                            id="togglePassword"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REGISTER BUTTON -->
+
+                <button
+                    type="submit"
+                    class="register-btn"
+                >
+                    Create Account
+                </button>
+
+
+            </form>
+
+
+            <!-- =========================
+                 DIVIDER
+            ========================== -->
+
+            <div class="divider">
+
+                <span>
+                    OR
+                </span>
+
+            </div>
+
+
+            <!-- =========================
+                 GOOGLE
+            ========================== -->
+
+            <button
+                type="button"
+                class="google-btn"
+                id="googleRegisterBtn"
+            >
+
+                <span class="google-icon">
+                    G
+                </span>
+
+                Continue with Google
+
+            </button>
+
+
+            <!-- =========================
+                 LOGIN
+            ========================== -->
+
+            <p class="login-text">
+
+                Already have an account?
+
+                <a href="student_login.html">
+                    Login
+                </a>
+
+            </p>
+
+
+            <!-- STUDENT PORTAL -->
+
+            <p class="student-note">
+                Student Portal
+            </p>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         PASSWORD SHOW / HIDE
+    ========================== -->
+
+    <script>
+
+        const password =
+            document.getElementById("password");
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+
+        togglePassword.addEventListener("click", function () {
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                togglePassword.textContent = "🙈";
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+            } else {
+
+                password.type = "password";
+
+                togglePassword.textContent = "👁";
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+            }
+
+        });
+
+    </script>
+
+
+    <!-- Registration JavaScript -->
+
+    <script src="../JS/register.js"></script>
+
+
+</body>
+
+</html>

@@ -12,10 +12,12 @@
   },
   "license": "MIT",
   "author": "Vedhaanthsri S",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node backend/server.js/server.mjs",
+    "dev": "nodemon backend/server.js/server.mjs"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
