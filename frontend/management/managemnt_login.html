@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Management Login</title>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            #3b0a0a,
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            #170000,
+            transparent 45%
+        ),
+        #080808;
+
+    color: white;
+}
+
+
+/* Main container */
+
+.login-container {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+
+/* Login card */
+
+.login-card {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 45px 40px;
+
+    background: rgba(20, 20, 20, 0.88);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 18px;
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.7),
+        0 0 30px rgba(180, 0, 0, 0.15);
+}
+
+
+/* Logo */
+
+.logo {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 22px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 14px;
+
+    background: #e50914;
+
+    transform: rotate(-5deg);
+
+    box-shadow:
+        6px 6px 0 #650000;
+}
+
+.logo span {
+    font-size: 24px;
+    font-weight: 900;
+
+    transform: rotate(5deg);
+}
+
+
+/* Heading */
+
+h1 {
+    text-align: center;
+
+    font-size: 30px;
+
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+
+    color: #aaa;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    margin-bottom: 32px;
+}
+
+
+/* Input */
+
+.input-group {
+    margin-bottom: 22px;
+}
+
+.input-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #ddd;
+}
+
+.input-group input {
+    width: 100%;
+
+    padding: 14px 15px;
+
+    border: 1px solid #333;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #111;
+
+    color: white;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+.input-group input::placeholder {
+    color: #666;
+}
+
+.input-group input:focus {
+    border-color: #e50914;
+
+    box-shadow:
+        0 0 0 3px rgba(229, 9, 20, 0.12);
+}
+
+
+/* Login button */
+
+.login-btn {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #e50914;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.login-btn:hover {
+    background: #ff1824;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(229, 9, 20, 0.25);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.login-btn:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* Back link */
+
+.back-link {
+    margin-top: 25px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+.back-link a {
+    color: #aaa;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+.back-link a:hover {
+    color: white;
+}
+
+
+/* Mobile */
+
+@media (max-width: 500px) {
+
+    .login-card {
+        padding: 35px 25px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="logo">
+                <span>CI</span>
+            </div>
+
+            <h1>Management Login</h1>
+
+            <p class="subtitle">
+                Access the Campus Insight management portal
+            </p>
+
+            <form id="management-login-form">
+
+                <div class="input-group">
+                    <label for="management-email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="management-email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+
+                <div class="input-group">
+                    <label for="management-password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="management-password"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+
+                <button type="submit" class="login-btn">
+                    Login
+                </button>
+
+            </form>
+
+            <p class="back-link">
+                <a href="../student/student_login.html">
+                    ← Back to Student Login
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="../JS/register.js"></script>
+
+</body>
+</html>

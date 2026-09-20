@@ -4,8 +4,9 @@ const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true,
-            trim: true
+            required: function () {
+                return this.role === "student";
+            }
         },
 
         email: {
@@ -18,7 +19,19 @@ const userSchema = new mongoose.Schema(
 
         password: {
             type: String,
-            required: true
+            default: null
+        },
+
+        googleId: {
+            type: String,
+            sparse: true,
+            unique: true
+        },
+
+        role: {
+            type: String,
+            enum: ["student", "management"],
+            default: "student"
         }
     },
     {
