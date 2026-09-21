@@ -264,7 +264,6 @@ if (managementLoginForm) {
     );
 }
 
-
 // ==================== MANAGEMENT LOGOUT ====================
 
 if (managementLogoutBtn) {
@@ -314,3 +313,188 @@ if (managementLogoutBtn) {
         }
     });
 }
+
+
+// ======================================================
+// ELEMENTS
+// ======================================================
+
+const issueForm = document.getElementById("issueForm");
+
+const photoInput = document.getElementById("photo");
+const preview = document.getElementById("preview");
+
+const formStatus = document.getElementById("formStatus");
+
+
+// ======================================================
+// IMAGE PREVIEW
+// ======================================================
+
+if (photoInput) {
+
+    photoInput.addEventListener("change", () => {
+
+        const file = photoInput.files[0];
+
+        if (!file) {
+
+            preview.src = "";
+            preview.style.display = "none";
+
+            return;
+        }
+
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+
+    });
+
+}
+
+
+// ======================================================
+// REPORT ISSUE
+// ======================================================
+
+if (issueForm) {
+
+    issueForm.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        formStatus.textContent = "Sending the signal...";
+        formStatus.style.color = "#aaa";
+
+
+        // FormData gets:
+        // category
+        // location
+        // description
+        // photo
+
+        const formData = new FormData(issueForm);
+
+
+        try {
+
+            const response = await fetch("/issues", {
+
+                method: "POST",
+
+                credentials: "include",
+
+                body: formData
+
+            });
+
+
+            const data = await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message || "Failed to report issue"
+                );
+
+            }
+
+
+            // Success
+
+            formStatus.textContent =
+                "Issue reported successfully!";
+
+            formStatus.style.color = "lightgreen";
+
+
+            console.log("Issue created:", data.issue);
+
+
+            // Clear form
+
+            issueForm.reset();
+
+            preview.src = "";
+            preview.style.display = "none";
+
+
+        } catch (error) {
+
+            console.error(
+                "Issue submission error:",
+                error
+            );
+
+            formStatus.textContent =
+                error.message;
+
+            formStatus.style.color = "#ff4444";
+
+        }
+
+    });
+
+}
+// =========================
+// LOAD MY ISSUES
+// =========================
+const issueGrid = document.getElementById("issueGrid");
+
+async function loadMyIssues() {
+    if (!issueGrid) return;
+
+    try {
+        const response = await fetch("/student/issues", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to fetch issues");
+        }
+
+        issueGrid.innerHTML = "";
+
+        if (data.issues.length === 0) {
+            issueGrid.innerHTML = `
+                <p>No issues reported yet.</p>
+            `;
+            return;
+        }
+
+        data.issues.forEach(issue => {
+
+            const issueCard = document.createElement("article");
+
+            issueCard.className = "issue";
+
+            issueCard.innerHTML = `
+                <span class="issue-tag">${issue.category}</span>
+
+                <h3>${issue.description}</h3>
+
+                <p>${issue.location}</p>
+
+                <span class="status-pill">
+                    ${issue.status.toUpperCase()}
+                </span>
+            `;
+
+            issueGrid.appendChild(issueCard);
+        });
+
+    } catch (error) {
+        console.error("Load issues error:", error);
+
+        issueGrid.innerHTML = `
+            <p>Failed to load your issues.</p>
+        `;
+    }
+}
+
+loadMyIssues();
+

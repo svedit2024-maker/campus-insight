@@ -1,0 +1,1139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Issues | Campus Insight</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f6f8;
+            color: #1f2937;
+        }
+
+        /* =========================
+           LAYOUT
+        ========================= */
+
+        .portal {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+
+            padding: 24px 18px;
+
+            display: flex;
+            flex-direction: column;
+
+            position: fixed;
+
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 5px 8px 30px;
+        }
+
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: white;
+            color: #111827;
+
+            font-weight: bold;
+        }
+
+
+        .brand h2 {
+            font-size: 16px;
+        }
+
+
+        .brand span {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+
+        /* Navigation */
+
+        .navigation {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+
+        .nav-item {
+            text-decoration: none;
+
+            color: #9ca3af;
+
+            padding: 13px 14px;
+
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            font-size: 14px;
+        }
+
+
+        .nav-item:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+
+        .nav-item.active {
+            background: #374151;
+            color: white;
+        }
+
+
+        /* Sidebar bottom */
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+
+        .management-profile {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 15px 8px;
+
+            border-top: 1px solid #374151;
+        }
+
+
+        .profile-icon,
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #374151;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+        }
+
+
+        .management-profile strong,
+        .admin-info strong {
+            display: block;
+
+            font-size: 13px;
+        }
+
+
+        .management-profile small,
+        .admin-info small {
+            color: #9ca3af;
+
+            font-size: 11px;
+        }
+
+
+        .logout-btn {
+            width: 100%;
+
+            border: none;
+
+            background: transparent;
+
+            color: #9ca3af;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+
+        .logout-btn:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main-content {
+            margin-left: 250px;
+
+            width: calc(100% - 250px);
+
+            padding: 32px 40px;
+        }
+
+
+        /* =========================
+           TOP BAR
+        ========================= */
+
+        .topbar {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 30px;
+        }
+
+
+        .welcome-text {
+            color: #6b7280;
+
+            font-size: 13px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .topbar h1 {
+            font-size: 28px;
+        }
+
+
+        .topbar-right {
+            display: flex;
+
+            align-items: center;
+
+            gap: 22px;
+        }
+
+
+        .notification-btn {
+            position: relative;
+
+            border: none;
+
+            background: white;
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 20px;
+        }
+
+
+        .notification-dot {
+            position: absolute;
+
+            width: 7px;
+            height: 7px;
+
+            background: #ef4444;
+
+            border-radius: 50%;
+
+            top: 9px;
+            right: 9px;
+        }
+
+
+        .admin-info {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        /* =========================
+           PAGE HEADER
+        ========================= */
+
+        .page-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+        }
+
+
+        .page-header h2 {
+            font-size: 20px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .page-header p {
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           FILTER SECTION
+        ========================= */
+
+        .filter-section {
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .filter-row {
+            display: flex;
+
+            gap: 12px;
+
+            align-items: center;
+        }
+
+
+        .search-box {
+            flex: 1;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 12px;
+        }
+
+
+        .search-box span {
+            color: #9ca3af;
+
+            font-size: 20px;
+        }
+
+
+        .search-box input {
+            width: 100%;
+
+            border: none;
+
+            outline: none;
+
+            padding: 12px;
+
+            font-size: 13px;
+        }
+
+
+        .filter-select {
+            border: 1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            padding: 11px 12px;
+
+            background: white;
+
+            outline: none;
+
+            cursor: pointer;
+
+            min-width: 150px;
+        }
+
+
+        .filter-select:focus,
+        .search-box:focus-within {
+            border-color: #6b7280;
+        }
+
+
+        /* =========================
+           ISSUES TABLE
+        ========================= */
+
+        .issues-container {
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 25px;
+        }
+
+
+        .table-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+
+        .table-header h2 {
+            font-size: 18px;
+        }
+
+
+        .issue-count {
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        .table-container {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 950px;
+        }
+
+
+        th {
+            text-align: left;
+
+            padding: 13px 10px;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            color: #6b7280;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        td {
+            padding: 15px 10px;
+
+            border-bottom: 1px solid #f0f0f0;
+
+            font-size: 13px;
+
+            color: #4b5563;
+
+            vertical-align: middle;
+        }
+
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+
+        /* =========================
+           ISSUE NAME
+        ========================= */
+
+        .issue-name {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .issue-image {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 8px;
+
+            background: #f3f4f6;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            flex-shrink: 0;
+        }
+
+
+        .issue-image img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+
+        .issue-name strong {
+            display: block;
+
+            color: #111827;
+
+            margin-bottom: 4px;
+
+            font-size: 13px;
+        }
+
+
+        .issue-name small {
+            color: #9ca3af;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           CATEGORY
+        ========================= */
+
+        .category {
+            background: #f3f4f6;
+
+            padding: 5px 8px;
+
+            border-radius: 5px;
+
+            font-size: 11px;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        .pending-status {
+            background: #fff7ed;
+
+            color: #c2410c;
+        }
+
+
+        .progress-status {
+            background: #eff6ff;
+
+            color: #1d4ed8;
+        }
+
+
+        .resolved-status {
+            background: #f0fdf4;
+
+            color: #15803d;
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-state {
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: #9ca3af;
+
+            display: none;
+        }
+
+
+        .empty-state-icon {
+            font-size: 35px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .empty-state h3 {
+            color: #4b5563;
+
+            font-size: 16px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .filter-row {
+                flex-wrap: wrap;
+            }
+
+
+            .search-box {
+                flex-basis: 100%;
+            }
+
+
+            .filter-select {
+                flex: 1;
+            }
+
+        }
+
+
+        @media (max-width: 750px) {
+
+            .sidebar {
+                width: 70px;
+
+                padding: 20px 10px;
+            }
+
+
+            .brand h2,
+            .brand span,
+            .nav-item,
+            .management-profile div,
+            .logout-btn {
+                font-size: 0;
+            }
+
+
+            .brand {
+                justify-content: center;
+            }
+
+
+            .navigation {
+                align-items: center;
+            }
+
+
+            .nav-item {
+                width: 45px;
+
+                justify-content: center;
+            }
+
+
+            .main-content {
+                margin-left: 70px;
+
+                width: calc(100% - 70px);
+
+                padding: 25px 18px;
+            }
+
+
+            .admin-info {
+                display: none;
+            }
+
+
+            .page-header {
+                align-items: flex-start;
+            }
+
+
+            .filter-row {
+                flex-direction: column;
+            }
+
+
+            .search-box,
+            .filter-select {
+                width: 100%;
+
+                flex-basis: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="portal">
+
+
+        <!-- =========================
+             SIDEBAR
+        ========================= -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    CI
+                </div>
+
+                <div>
+
+                    <h2>
+                        Campus Insight
+                    </h2>
+
+                    <span>
+                        Management
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="navigation">
+
+                <a
+                    href="management.html"
+                    class="nav-item"
+                >
+
+                    <span>
+                        ▦
+                    </span>
+
+                    Dashboard
+
+                </a>
+
+
+                <a
+                    href="all_issues.html"
+                    class="nav-item active"
+                >
+
+                    <span>
+                        ☷
+                    </span>
+
+                    All Issues
+
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="management-profile">
+
+                    <div class="profile-icon">
+                        M
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Management
+                        </strong>
+
+                        <small>
+                            Administrator
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="logout-btn"
+                    id="management-logout-btn"
+                >
+
+                    <span>
+                        ↪
+                    </span>
+
+                    Logout
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =========================
+             MAIN CONTENT
+        ========================= -->
+
+        <main class="main-content">
+
+
+            <!-- Top Bar -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <p class="welcome-text">
+                        Management Portal
+                    </p>
+
+                    <h1>
+                        All Issues
+                    </h1>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <button class="notification-btn">
+
+                        ♢
+
+                        <span class="notification-dot"></span>
+
+                    </button>
+
+
+                    <div class="admin-info">
+
+                        <div class="admin-avatar">
+                            M
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Management
+                            </strong>
+
+                            <small>
+                                Administrator
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- Page Header -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <h2>
+                        All Reported Issues
+                    </h2>
+
+                    <p>
+                        View, filter and manage all campus issues.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 FILTERS
+            ========================= -->
+
+            <section class="filter-section">
+
+                <div class="filter-row">
+
+
+                    <div class="search-box">
+
+                        <span>
+                            ⌕
+                        </span>
+
+                        <input
+                            type="text"
+                            id="issue-search"
+                            placeholder="Search by issue, location or student..."
+                        >
+
+                    </div>
+
+
+                    <select
+                        class="filter-select"
+                        id="status-filter"
+                    >
+
+                        <option value="all">
+                            All Status
+                        </option>
+
+                        <option value="pending">
+                            Pending
+                        </option>
+
+                        <option value="progress">
+                            In Progress
+                        </option>
+
+                        <option value="resolved">
+                            Resolved
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        class="filter-select"
+                        id="category-filter"
+                    >
+
+                        <option value="all">
+                            All Categories
+                        </option>
+
+                        <option value="Infrastructure">
+                            Infrastructure
+                        </option>
+
+                        <option value="Cleanliness">
+                            Cleanliness
+                        </option>
+
+                        <option value="Electricity">
+                            Electricity
+                        </option>
+
+                        <option value="Water">
+                            Water
+                        </option>
+
+                        <option value="Safety">
+                            Safety
+                        </option>
+
+                        <option value="Internet">
+                            Internet
+                        </option>
+
+                        <option value="Transport">
+                            Transport
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+                 ISSUES TABLE
+            ========================= -->
+
+            <section class="issues-container">
+
+
+                <div class="table-header">
+
+                    <h2>
+                        Issues
+                    </h2>
+
+                    <span
+                        class="issue-count"
+                        id="issue-count"
+                    >
+                        All Issues
+                    </span>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Issue
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Location
+                                </th>
+
+                                <th>
+                                    Reported By
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="issues-table">
+
+                        </tbody>
+
+                    </table>
+
+
+                    <!-- Empty State -->
+
+                    <div
+                        class="empty-state"
+                        id="empty-state"
+                    >
+
+                        <div class="empty-state-icon">
+                            📭
+                        </div>
+
+                        <h3>
+                            No issues found
+                        </h3>
+
+                        <p>
+                            There are no issues matching your search or filters.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- JavaScript -->
+
+    <script src="../JS/register.js"></script>
+
+    <script src="../JS/All_issues.js"></script>
+
+</body>
+
+</html>

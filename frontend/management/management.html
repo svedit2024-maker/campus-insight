@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,939 +9,910 @@
 
     <style>
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f6f8;
+            color: #1f2937;
+        }
+
+        /* =========================
+           MAIN LAYOUT
+        ========================= */
+
+        .portal {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px 18px;
+
+            display: flex;
+            flex-direction: column;
+
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 8px 30px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f6f8;
-    color: #1f2937;
-}
+            background: white;
+            color: #111827;
 
+            font-weight: bold;
+        }
 
-/* =========================
-   MAIN LAYOUT
-========================= */
+        .brand h2 {
+            font-size: 16px;
+        }
 
-.portal {
-    display: flex;
-    min-height: 100vh;
-}
+        .brand span {
+            font-size: 12px;
+            color: #9ca3af;
+        }
 
+        .navigation {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
 
-/* =========================
-   SIDEBAR
-========================= */
+        .nav-item {
+            text-decoration: none;
+            color: #9ca3af;
 
-.sidebar {
-    width: 250px;
-    background: #111827;
-    color: white;
-    padding: 24px 18px;
+            padding: 13px 14px;
 
-    display: flex;
-    flex-direction: column;
-    position: fixed;
+            border-radius: 8px;
 
-    top: 0;
-    bottom: 0;
-    left: 0;
-}
+            display: flex;
+            align-items: center;
+            gap: 12px;
 
+            font-size: 14px;
+        }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+        .nav-item:hover {
+            background: #1f2937;
+            color: white;
+        }
 
-    padding: 5px 8px 30px;
-}
+        .nav-item.active {
+            background: #374151;
+            color: white;
+        }
 
-.brand-icon {
-    width: 42px;
-    height: 42px;
+        .sidebar-bottom {
+            margin-top: auto;
+        }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        .management-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
 
-    border-radius: 10px;
+            padding: 15px 8px;
 
-    background: white;
-    color: #111827;
+            border-top: 1px solid #374151;
+        }
 
-    font-weight: bold;
-}
+        .profile-icon,
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
 
-.brand h2 {
-    font-size: 16px;
-}
+            border-radius: 50%;
 
-.brand span {
-    font-size: 12px;
-    color: #9ca3af;
-}
+            background: #374151;
 
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-/* Navigation */
+            font-weight: bold;
+        }
 
-.navigation {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
+        .management-profile strong,
+        .admin-info strong {
+            display: block;
+            font-size: 13px;
+        }
 
-.nav-item {
-    text-decoration: none;
-    color: #9ca3af;
+        .management-profile small,
+        .admin-info small {
+            color: #9ca3af;
+            font-size: 11px;
+        }
 
-    padding: 13px 14px;
+        .logout-btn {
+            width: 100%;
 
-    border-radius: 8px;
+            border: none;
+            background: transparent;
 
-    display: flex;
-    align-items: center;
-    gap: 12px;
+            color: #9ca3af;
 
-    font-size: 14px;
-}
+            padding: 12px;
 
-.nav-item:hover {
-    background: #1f2937;
-    color: white;
-}
+            border-radius: 8px;
 
-.nav-item.active {
-    background: #374151;
-    color: white;
-}
+            text-align: left;
 
+            cursor: pointer;
 
-/* Sidebar bottom */
+            font-size: 14px;
+        }
 
-.sidebar-bottom {
-    margin-top: auto;
-}
+        .logout-btn:hover {
+            background: #1f2937;
+            color: white;
+        }
 
-.management-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+        /* =========================
+           MAIN CONTENT
+        ========================= */
 
-    padding: 15px 8px;
+        .main-content {
+            margin-left: 250px;
 
-    border-top: 1px solid #374151;
-}
+            width: calc(100% - 250px);
 
-.profile-icon,
-.admin-avatar {
-    width: 38px;
-    height: 38px;
+            padding: 32px 40px;
+        }
 
-    border-radius: 50%;
+        /* =========================
+           TOP BAR
+        ========================= */
 
-    background: #374151;
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+            margin-bottom: 30px;
+        }
 
-    font-weight: bold;
-}
+        .welcome-text {
+            color: #6b7280;
+            font-size: 13px;
 
-.management-profile strong,
-.admin-info strong {
-    display: block;
-    font-size: 13px;
-}
+            margin-bottom: 5px;
+        }
 
-.management-profile small,
-.admin-info small {
-    color: #9ca3af;
-    font-size: 11px;
-}
+        .topbar h1 {
+            font-size: 28px;
+        }
 
+        .topbar-right {
+            display: flex;
+            align-items: center;
+        }
 
-.logout-btn {
-    width: 100%;
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    border: none;
-    background: transparent;
+        /* =========================
+           STATISTICS
+        ========================= */
 
-    color: #9ca3af;
+        .statistics {
+            display: grid;
 
-    padding: 12px;
+            grid-template-columns: repeat(4, 1fr);
 
-    border-radius: 8px;
+            gap: 18px;
 
-    text-align: left;
+            margin-bottom: 30px;
+        }
 
-    cursor: pointer;
+        .stat-card {
+            background: white;
 
-    font-size: 14px;
-}
+            border: 1px solid #e5e7eb;
 
-.logout-btn:hover {
-    background: #1f2937;
-    color: white;
-}
+            border-radius: 12px;
 
+            padding: 20px;
 
-/* =========================
-   MAIN CONTENT
-========================= */
+            display: flex;
+            align-items: center;
 
-.main-content {
-    margin-left: 250px;
+            gap: 15px;
+        }
 
-    width: calc(100% - 250px);
+        .stat-icon {
+            width: 45px;
+            height: 45px;
 
-    padding: 32px 40px;
-}
+            border-radius: 10px;
 
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-/* =========================
-   TOP BAR
-========================= */
+            font-weight: bold;
+            font-size: 18px;
+        }
 
-.topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+        .stat-icon.total {
+            background: #f3f4f6;
+        }
 
-    margin-bottom: 30px;
-}
+        .stat-icon.pending {
+            background: #fff7ed;
+        }
 
-.welcome-text {
-    color: #6b7280;
-    font-size: 13px;
+        .stat-icon.progress {
+            background: #eff6ff;
+        }
 
-    margin-bottom: 5px;
-}
+        .stat-icon.resolved {
+            background: #f0fdf4;
+        }
 
-.topbar h1 {
-    font-size: 28px;
-}
+        .stat-card p {
+            color: #6b7280;
 
+            font-size: 13px;
 
-.topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 22px;
-}
+            margin-bottom: 5px;
+        }
 
+        .stat-card h2 {
+            font-size: 24px;
+        }
 
-.notification-btn {
-    position: relative;
+        /* =========================
+           ISSUES SECTION
+        ========================= */
 
-    border: none;
-    background: white;
+        .issues-section {
+            background: white;
 
-    width: 42px;
-    height: 42px;
+            border: 1px solid #e5e7eb;
 
-    border-radius: 10px;
+            border-radius: 14px;
 
-    cursor: pointer;
+            padding: 25px;
+        }
 
-    font-size: 20px;
-}
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-.notification-dot {
-    position: absolute;
+            margin-bottom: 22px;
+        }
 
-    width: 7px;
-    height: 7px;
+        .section-header h2 {
+            font-size: 19px;
 
-    background: #ef4444;
+            margin-bottom: 5px;
+        }
 
-    border-radius: 50%;
+        .section-header p {
+            color: #6b7280;
+            font-size: 13px;
+        }
 
-    top: 9px;
-    right: 9px;
-}
+        .view-all-btn {
+            border: 1px solid #d1d5db;
 
+            background: white;
 
-.admin-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+            padding: 9px 15px;
 
+            border-radius: 7px;
 
-/* =========================
-   STATISTICS
-========================= */
+            cursor: pointer;
+        }
 
-.statistics {
-    display: grid;
+        .view-all-btn:hover {
+            background: #f9fafb;
+        }
 
-    grid-template-columns: repeat(4, 1fr);
+        /* =========================
+           SEARCH / FILTER
+        ========================= */
 
-    gap: 18px;
+        .issue-tools {
+            display: flex;
 
-    margin-bottom: 30px;
-}
+            gap: 12px;
 
+            margin-bottom: 20px;
+        }
 
-.stat-card {
-    background: white;
+        .search-box {
+            flex: 1;
 
-    border: 1px solid #e5e7eb;
+            border: 1px solid #d1d5db;
 
-    border-radius: 12px;
+            border-radius: 8px;
 
-    padding: 20px;
+            display: flex;
+            align-items: center;
 
-    display: flex;
-    align-items: center;
+            padding: 0 12px;
+        }
 
-    gap: 15px;
-}
+        .search-box span {
+            color: #9ca3af;
+            font-size: 20px;
+        }
 
+        .search-box input {
+            width: 100%;
 
-.stat-icon {
-    width: 45px;
-    height: 45px;
+            border: none;
+            outline: none;
 
-    border-radius: 10px;
+            padding: 11px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+            font-size: 13px;
+        }
 
-    font-weight: bold;
-    font-size: 18px;
-}
+        .issue-tools select {
+            border: 1px solid #d1d5db;
 
-.stat-icon.total {
-    background: #f3f4f6;
-}
+            border-radius: 8px;
 
-.stat-icon.pending {
-    background: #fff7ed;
-}
+            padding: 0 12px;
 
-.stat-icon.progress {
-    background: #eff6ff;
-}
+            background: white;
 
-.stat-icon.resolved {
-    background: #f0fdf4;
-}
+            outline: none;
 
+            cursor: pointer;
+        }
 
-.stat-card p {
-    color: #6b7280;
+        /* =========================
+           TABLE
+        ========================= */
 
-    font-size: 13px;
+        .table-container {
+            width: 100%;
 
-    margin-bottom: 5px;
-}
+            overflow-x: auto;
+        }
 
-.stat-card h2 {
-    font-size: 24px;
-}
+        table {
+            width: 100%;
 
+            border-collapse: collapse;
 
-/* =========================
-   ISSUES SECTION
-========================= */
+            min-width: 850px;
+        }
 
-.issues-section {
-    background: white;
+        th {
+            text-align: left;
 
-    border: 1px solid #e5e7eb;
+            padding: 13px 10px;
 
-    border-radius: 14px;
+            font-size: 11px;
 
-    padding: 25px;
-}
+            text-transform: uppercase;
 
+            color: #6b7280;
 
-.section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-    margin-bottom: 22px;
-}
+        td {
+            padding: 15px 10px;
 
-.section-header h2 {
-    font-size: 19px;
+            border-bottom: 1px solid #f0f0f0;
 
-    margin-bottom: 5px;
-}
+            font-size: 13px;
 
-.section-header p {
-    color: #6b7280;
-    font-size: 13px;
-}
+            color: #4b5563;
+        }
 
+        .issue-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.view-all-btn {
-    border: 1px solid #d1d5db;
+        .issue-name strong {
+            display: block;
 
-    background: white;
+            color: #111827;
 
-    padding: 9px 15px;
+            margin-bottom: 4px;
+        }
 
-    border-radius: 7px;
+        .issue-name small {
+            color: #9ca3af;
+        }
 
-    cursor: pointer;
-}
+        .issue-image {
+            width: 40px;
+            height: 40px;
 
-.view-all-btn:hover {
-    background: #f9fafb;
-}
+            border-radius: 7px;
 
+            background: #f3f4f6;
 
-/* =========================
-   SEARCH / FILTER
-========================= */
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-.issue-tools {
-    display: flex;
+            overflow: hidden;
+        }
 
-    gap: 12px;
+        .issue-image img {
+            width: 100%;
+            height: 100%;
 
-    margin-bottom: 20px;
-}
+            object-fit: cover;
+        }
 
+        .category {
+            background: #f3f4f6;
 
-.search-box {
-    flex: 1;
+            padding: 5px 8px;
 
-    border: 1px solid #d1d5db;
+            border-radius: 5px;
 
-    border-radius: 8px;
+            font-size: 11px;
+        }
 
-    display: flex;
-    align-items: center;
+        .status {
+            padding: 5px 9px;
 
-    padding: 0 12px;
-}
+            border-radius: 20px;
 
-.search-box span {
-    color: #9ca3af;
-    font-size: 20px;
-}
+            font-size: 11px;
 
-.search-box input {
-    width: 100%;
+            font-weight: 600;
+        }
 
-    border: none;
-    outline: none;
+        .pending-status {
+            background: #fff7ed;
+            color: #c2410c;
+        }
 
-    padding: 11px;
+        .progress-status {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
 
-    font-size: 13px;
-}
+        .resolved-status {
+            background: #f0fdf4;
+            color: #15803d;
+        }
 
+        .view-btn {
+            border: 1px solid #d1d5db;
 
-.issue-tools select {
-    border: 1px solid #d1d5db;
+            background: white;
 
-    border-radius: 8px;
+            padding: 6px 11px;
 
-    padding: 0 12px;
+            border-radius: 6px;
 
-    background: white;
+            cursor: pointer;
 
-    outline: none;
+            font-size: 12px;
+        }
 
-    cursor: pointer;
-}
+        .view-btn:hover {
+            background: #f3f4f6;
+        }
 
+        /* =========================
+           ISSUE DETAILS
+        ========================= */
 
-/* =========================
-   TABLE
-========================= */
+        .issue-details {
+            margin-top: 25px;
 
-.table-container {
-    width: 100%;
+            background: white;
 
-    overflow-x: auto;
-}
+            border: 1px solid #e5e7eb;
 
+            border-radius: 14px;
 
-table {
-    width: 100%;
+            padding: 25px;
+        }
 
-    border-collapse: collapse;
+        .details-header {
+            display: flex;
 
-    min-width: 850px;
-}
+            justify-content: space-between;
 
+            align-items: flex-start;
 
-th {
-    text-align: left;
+            padding-bottom: 20px;
 
-    padding: 13px 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-    font-size: 11px;
+        .details-label {
+            color: #6b7280;
 
-    text-transform: uppercase;
+            font-size: 12px;
 
-    color: #6b7280;
+            margin-bottom: 5px;
+        }
 
-    border-bottom: 1px solid #e5e7eb;
-}
+        .details-header h2 {
+            font-size: 21px;
 
+            margin-bottom: 5px;
+        }
 
-td {
-    padding: 15px 10px;
+        .issue-id {
+            color: #9ca3af;
 
-    border-bottom: 1px solid #f0f0f0;
+            font-size: 12px;
+        }
 
-    font-size: 13px;
+        .close-details {
+            border: none;
 
-    color: #4b5563;
-}
+            background: #f3f4f6;
 
+            width: 34px;
+            height: 34px;
 
-.issue-name {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+            border-radius: 7px;
 
+            cursor: pointer;
 
-.issue-name strong {
-    display: block;
+            font-size: 20px;
+        }
 
-    color: #111827;
+        .details-content {
+            display: grid;
 
-    margin-bottom: 4px;
-}
+            grid-template-columns: 300px 1fr;
 
+            gap: 30px;
 
-.issue-name small {
-    color: #9ca3af;
-}
+            padding-top: 25px;
+        }
 
+        .details-image {
+            height: 230px;
 
-.issue-image {
-    width: 40px;
-    height: 40px;
+            background: #f3f4f6;
 
-    border-radius: 7px;
+            border-radius: 10px;
 
-    background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+            color: #9ca3af;
 
+            overflow: hidden;
+        }
 
-.category {
-    background: #f3f4f6;
+        .details-image img {
+            width: 100%;
+            height: 100%;
 
-    padding: 5px 8px;
+            object-fit: cover;
+        }
 
-    border-radius: 5px;
+        /* =========================
+           INFORMATION
+        ========================= */
 
-    font-size: 11px;
-}
+        .issue-information {
+            display: flex;
 
+            flex-direction: column;
 
-.status {
-    padding: 5px 9px;
+            gap: 20px;
+        }
 
-    border-radius: 20px;
+        .info-row {
+            display: grid;
 
-    font-size: 11px;
+            grid-template-columns: 1fr 1fr;
 
-    font-weight: 600;
-}
+            gap: 20px;
+        }
 
-.pending-status {
-    background: #fff7ed;
-    color: #c2410c;
-}
+        .info-row span,
+        .description span {
+            display: block;
 
-.progress-status {
-    background: #eff6ff;
-    color: #1d4ed8;
-}
+            color: #9ca3af;
 
-.resolved-status {
-    background: #f0fdf4;
-    color: #15803d;
-}
+            font-size: 11px;
 
+            margin-bottom: 6px;
 
-.view-btn {
-    border: 1px solid #d1d5db;
+            text-transform: uppercase;
+        }
 
-    background: white;
+        .info-row strong {
+            font-size: 14px;
+        }
 
-    padding: 6px 11px;
+        .description p {
+            color: #4b5563;
 
-    border-radius: 6px;
+            font-size: 13px;
 
-    cursor: pointer;
+            line-height: 1.6;
+        }
 
-    font-size: 12px;
-}
+        /* =========================
+           UPDATE
+        ========================= */
 
-.view-btn:hover {
-    background: #f3f4f6;
-}
+        .update-section label,
+        .response-section label {
+            display: block;
 
+            font-size: 13px;
 
-/* =========================
-   ISSUE DETAILS
-========================= */
+            font-weight: 600;
 
-.issue-details {
-    margin-top: 25px;
+            margin-bottom: 8px;
+        }
 
-    background: white;
+        .update-section select {
+            width: 100%;
 
-    border: 1px solid #e5e7eb;
+            padding: 11px;
 
-    border-radius: 14px;
+            border: 1px solid #d1d5db;
 
-    padding: 25px;
-}
+            border-radius: 7px;
 
+            background: white;
 
-.details-header {
-    display: flex;
+            outline: none;
+        }
 
-    justify-content: space-between;
+        .response-section textarea {
+            width: 100%;
 
-    align-items: flex-start;
+            min-height: 100px;
 
-    padding-bottom: 20px;
+            resize: vertical;
 
-    border-bottom: 1px solid #e5e7eb;
-}
+            border: 1px solid #d1d5db;
 
+            border-radius: 7px;
 
-.details-label {
-    color: #6b7280;
+            padding: 12px;
 
-    font-size: 12px;
+            font-family: inherit;
 
-    margin-bottom: 5px;
-}
+            font-size: 13px;
 
+            outline: none;
+        }
 
-.details-header h2 {
-    font-size: 21px;
+        .response-section textarea:focus,
+        .update-section select:focus,
+        .search-box:focus-within {
+            border-color: #6b7280;
+        }
 
-    margin-bottom: 5px;
-}
+        /* =========================
+           UPDATE BUTTON
+        ========================= */
 
+        .update-btn {
+            align-self: flex-start;
 
-.issue-id {
-    color: #9ca3af;
+            border: none;
 
-    font-size: 12px;
-}
+            background: #111827;
 
+            color: white;
 
-.close-details {
-    border: none;
+            padding: 11px 20px;
 
-    background: #f3f4f6;
+            border-radius: 7px;
 
-    width: 34px;
-    height: 34px;
+            cursor: pointer;
 
-    border-radius: 7px;
+            font-size: 13px;
+        }
 
-    cursor: pointer;
+        .update-btn:hover {
+            background: #1f2937;
+        }
 
-    font-size: 20px;
-}
+        /* =========================
+           RESPONSIVE
+        ========================= */
 
+        @media (max-width: 1100px) {
 
-.details-content {
-    display: grid;
+            .statistics {
+                grid-template-columns: repeat(2, 1fr);
+            }
 
-    grid-template-columns: 300px 1fr;
+            .details-content {
+                grid-template-columns: 1fr;
+            }
 
-    gap: 30px;
+            .details-image {
+                height: 200px;
+            }
+        }
 
-    padding-top: 25px;
-}
+        @media (max-width: 750px) {
 
+            .sidebar {
+                width: 70px;
 
-.details-image {
-    height: 230px;
+                padding: 20px 10px;
+            }
 
-    background: #f3f4f6;
+            .brand h2,
+            .brand span,
+            .nav-item,
+            .management-profile div,
+            .logout-btn {
+                font-size: 0;
+            }
 
-    border-radius: 10px;
+            .brand {
+                justify-content: center;
+            }
 
-    display: flex;
+            .navigation {
+                align-items: center;
+            }
 
-    align-items: center;
-    justify-content: center;
+            .nav-item {
+                width: 45px;
 
-    color: #9ca3af;
-}
+                justify-content: center;
+            }
 
+            .main-content {
+                margin-left: 70px;
 
-/* Information */
+                width: calc(100% - 70px);
 
-.issue-information {
-    display: flex;
+                padding: 25px 18px;
+            }
 
-    flex-direction: column;
+            .statistics {
+                grid-template-columns: 1fr;
+            }
 
-    gap: 20px;
-}
+            .issue-tools {
+                flex-direction: column;
+            }
 
+            .issue-tools select {
+                height: 40px;
+            }
 
-.info-row {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 20px;
-}
-
-
-.info-row span,
-.description span {
-    display: block;
-
-    color: #9ca3af;
-
-    font-size: 11px;
-
-    margin-bottom: 6px;
-
-    text-transform: uppercase;
-}
-
-
-.info-row strong {
-    font-size: 14px;
-}
-
-
-.description p {
-    color: #4b5563;
-
-    font-size: 13px;
-
-    line-height: 1.6;
-}
-
-
-/* Update */
-
-.update-section label,
-.response-section label {
-    display: block;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-    margin-bottom: 8px;
-}
-
-
-.update-section select {
-    width: 100%;
-
-    padding: 11px;
-
-    border: 1px solid #d1d5db;
-
-    border-radius: 7px;
-
-    background: white;
-
-    outline: none;
-}
-
-
-.response-section textarea {
-    width: 100%;
-
-    min-height: 100px;
-
-    resize: vertical;
-
-    border: 1px solid #d1d5db;
-
-    border-radius: 7px;
-
-    padding: 12px;
-
-    font-family: inherit;
-
-    font-size: 13px;
-
-    outline: none;
-}
-
-
-.response-section textarea:focus,
-.update-section select:focus,
-.search-box:focus-within {
-    border-color: #6b7280;
-}
-
-
-/* Update button */
-
-.update-btn {
-    align-self: flex-start;
-
-    border: none;
-
-    background: #111827;
-
-    color: white;
-
-    padding: 11px 20px;
-
-    border-radius: 7px;
-
-    cursor: pointer;
-
-    font-size: 13px;
-}
-
-.update-btn:hover {
-    background: #1f2937;
-}
-
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 1100px) {
-
-    .statistics {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .details-content {
-        grid-template-columns: 1fr;
-    }
-
-    .details-image {
-        height: 200px;
-    }
-}
-
-
-@media (max-width: 750px) {
-
-    .sidebar {
-        width: 70px;
-
-        padding: 20px 10px;
-    }
-
-    .brand h2,
-    .brand span,
-    .nav-item,
-    .management-profile div,
-    .logout-btn {
-        font-size: 0;
-    }
-
-    .brand {
-        justify-content: center;
-    }
-
-    .navigation {
-        align-items: center;
-    }
-
-    .nav-item {
-        width: 45px;
-        justify-content: center;
-    }
-
-    .main-content {
-        margin-left: 70px;
-
-        width: calc(100% - 70px);
-
-        padding: 25px 18px;
-    }
-
-    .statistics {
-        grid-template-columns: 1fr;
-    }
-
-    .issue-tools {
-        flex-direction: column;
-    }
-
-    .issue-tools select {
-        height: 40px;
-    }
-
-    .admin-info {
-        display: none;
-    }
-}
+            .admin-info {
+                display: none;
+            }
+        }
 
     </style>
+
 </head>
+
 
 <body>
 
     <div class="portal">
 
-        <!-- Sidebar -->
+        <!-- =========================
+             SIDEBAR
+        ========================= -->
+
         <aside class="sidebar">
 
             <div class="brand">
-                <div class="brand-icon">CI</div>
+
+                <div class="brand-icon">
+                    CI
+                </div>
 
                 <div>
                     <h2>Campus Insight</h2>
                     <span>Management</span>
                 </div>
+
             </div>
+
 
             <nav class="navigation">
 
                 <a href="#" class="nav-item active">
+
                     <span>▦</span>
+
                     Dashboard
+
                 </a>
 
-                <a href="#" class="nav-item">
+
+                <a href="All_issues.html" class="nav-item">
+
                     <span>☷</span>
+
                     All Issues
+
                 </a>
 
             </nav>
 
+
             <div class="sidebar-bottom">
 
                 <div class="management-profile">
-                    <div class="profile-icon">M</div>
+
+                    <div class="profile-icon">
+                        M
+                    </div>
 
                     <div>
-                        <strong>Management</strong>
-                        <small>Administrator</small>
+
+                        <strong>
+                            Management
+                        </strong>
+
+                        <small>
+                            Administrator
+                        </small>
+
                     </div>
+
                 </div>
 
-                <!-- Changed only this ID -->
-                <button class="logout-btn" id="management-logout-btn">
+
+                <button
+                    class="logout-btn"
+                    id="management-logout-btn"
+                >
+
                     <span>↪</span>
+
                     Logout
+
                 </button>
 
             </div>
@@ -948,31 +920,50 @@ td {
         </aside>
 
 
-        <!-- Main Content -->
+        <!-- =========================
+             MAIN CONTENT
+        ========================= -->
+
         <main class="main-content">
 
-            <!-- Header -->
+
+            <!-- HEADER -->
+
             <header class="topbar">
 
                 <div>
-                    <p class="welcome-text">Management Portal</p>
-                    <h1>Dashboard</h1>
+
+                    <p class="welcome-text">
+                        Management Portal
+                    </p>
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
                 </div>
+
 
                 <div class="topbar-right">
 
-                    <button class="notification-btn">
-                        ♢
-                        <span class="notification-dot"></span>
-                    </button>
-
                     <div class="admin-info">
-                        <div class="admin-avatar">M</div>
+
+                        <div class="admin-avatar">
+                            M
+                        </div>
 
                         <div>
-                            <strong>Management</strong>
-                            <small>Administrator</small>
+
+                            <strong>
+                                Management
+                            </strong>
+
+                            <small>
+                                Administrator
+                            </small>
+
                         </div>
+
                     </div>
 
                 </div>
@@ -980,8 +971,12 @@ td {
             </header>
 
 
-            <!-- Statistics -->
+            <!-- =========================
+                 STATISTICS
+            ========================= -->
+
             <section class="statistics">
+
 
                 <div class="stat-card">
 
@@ -990,8 +985,15 @@ td {
                     </div>
 
                     <div>
-                        <p>Total Issues</p>
-                        <h2 id="total-issues">42</h2>
+
+                        <p>
+                            Total Issues
+                        </p>
+
+                        <h2 id="total-issues">
+                            0
+                        </h2>
+
                     </div>
 
                 </div>
@@ -1004,8 +1006,15 @@ td {
                     </div>
 
                     <div>
-                        <p>Pending</p>
-                        <h2 id="pending-issues">15</h2>
+
+                        <p>
+                            Pending
+                        </p>
+
+                        <h2 id="pending-issues">
+                            0
+                        </h2>
+
                     </div>
 
                 </div>
@@ -1018,8 +1027,15 @@ td {
                     </div>
 
                     <div>
-                        <p>In Progress</p>
-                        <h2 id="progress-issues">18</h2>
+
+                        <p>
+                            In Progress
+                        </p>
+
+                        <h2 id="progress-issues">
+                            0
+                        </h2>
+
                     </div>
 
                 </div>
@@ -1032,38 +1048,65 @@ td {
                     </div>
 
                     <div>
-                        <p>Resolved</p>
-                        <h2 id="resolved-issues">9</h2>
+
+                        <p>
+                            Resolved
+                        </p>
+
+                        <h2 id="resolved-issues">
+                            0
+                        </h2>
+
                     </div>
 
                 </div>
 
+
             </section>
 
 
-            <!-- Issues Section -->
+            <!-- =========================
+                 ISSUES SECTION
+            ========================= -->
+
             <section class="issues-section">
+
 
                 <div class="section-header">
 
                     <div>
-                        <h2>Recent Issues</h2>
-                        <p>Manage and track reported campus issues.</p>
+
+                        <h2>
+                            Recent Issues
+                        </h2>
+
+                        <p>
+                            Manage and track reported campus issues.
+                        </p>
+
                     </div>
 
-                    <button class="view-all-btn">
+
+                    <button
+                        class="view-all-btn"
+                        onclick="window.location.href='All_issues.html'"
+                    >
                         View All
                     </button>
 
                 </div>
 
 
-                <!-- Search / Filter -->
+                <!-- SEARCH / FILTER -->
+
                 <div class="issue-tools">
+
 
                     <div class="search-box">
 
-                        <span>⌕</span>
+                        <span>
+                            ⌕
+                        </span>
 
                         <input
                             type="text"
@@ -1076,28 +1119,77 @@ td {
 
                     <select id="status-filter">
 
-                        <option value="all">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="progress">In Progress</option>
-                        <option value="resolved">Resolved</option>
+                        <option value="all">
+                            All Status
+                        </option>
+
+                        <option value="pending">
+                            Pending
+                        </option>
+
+                        <option value="progress">
+                            In Progress
+                        </option>
+
+                        <option value="resolved">
+                            Resolved
+                        </option>
 
                     </select>
 
 
                     <select id="category-filter">
 
-                        <option value="all">All Categories</option>
-                        <option value="electrical">Electrical</option>
-                        <option value="cleanliness">Cleanliness</option>
-                        <option value="water">Water</option>
-                        <option value="infrastructure">Infrastructure</option>
+                        <option value="all">
+                            All Categories
+                        </option>
+
+                        <option value="Infrastructure">
+                            Infrastructure
+                        </option>
+
+                        <option value="Cleanliness">
+                            Cleanliness
+                        </option>
+
+                        <option value="Electricity">
+                            Electricity
+                        </option>
+
+                        <option value="Water">
+                            Water
+                        </option>
+
+                        <option value="Safety">
+                            Safety
+                        </option>
+
+                        <option value="Internet">
+                            Internet
+                        </option>
+
+                        <option value="Transport">
+                            Transport
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
 
                     </select>
+
 
                 </div>
 
 
-                <!-- Issues Table -->
+                <!-- =========================
+                     ISSUES TABLE
+
+                     Empty intentionally.
+                     JavaScript will load issues
+                     from MongoDB.
+                ========================= -->
+
                 <div class="table-container">
 
                     <table>
@@ -1105,166 +1197,41 @@ td {
                         <thead>
 
                             <tr>
-                                <th>Issue</th>
-                                <th>Category</th>
-                                <th>Location</th>
-                                <th>Reported By</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
+
+                                <th>
+                                    Issue
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Location
+                                </th>
+
+                                <th>
+                                    Reported By
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
                             </tr>
 
                         </thead>
 
 
                         <tbody id="issues-table">
-
-                            <tr>
-
-                                <td>
-                                    <div class="issue-name">
-                                        <div class="issue-image">
-                                            🖼
-                                        </div>
-
-                                        <div>
-                                            <strong>Broken Classroom Fan</strong>
-                                            <small>#ISS-001</small>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <span class="category">
-                                        Electrical
-                                    </span>
-                                </td>
-
-                                <td>
-                                    Block A - Room 204
-                                </td>
-
-                                <td>
-                                    Student
-                                </td>
-
-                                <td>
-                                    20 Sep 2026
-                                </td>
-
-                                <td>
-                                    <span class="status pending-status">
-                                        Pending
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-btn">
-                                        View
-                                    </button>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>
-                                    <div class="issue-name">
-
-                                        <div class="issue-image">
-                                            🖼
-                                        </div>
-
-                                        <div>
-                                            <strong>Water Leakage</strong>
-                                            <small>#ISS-002</small>
-                                        </div>
-
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <span class="category">
-                                        Water
-                                    </span>
-                                </td>
-
-                                <td>
-                                    Block B - Floor 2
-                                </td>
-
-                                <td>
-                                    Student
-                                </td>
-
-                                <td>
-                                    19 Sep 2026
-                                </td>
-
-                                <td>
-                                    <span class="status progress-status">
-                                        In Progress
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-btn">
-                                        View
-                                    </button>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>
-                                    <div class="issue-name">
-
-                                        <div class="issue-image">
-                                            🖼
-                                        </div>
-
-                                        <div>
-                                            <strong>Damaged Desk</strong>
-                                            <small>#ISS-003</small>
-                                        </div>
-
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <span class="category">
-                                        Infrastructure
-                                    </span>
-                                </td>
-
-                                <td>
-                                    Block C - Room 105
-                                </td>
-
-                                <td>
-                                    Student
-                                </td>
-
-                                <td>
-                                    18 Sep 2026
-                                </td>
-
-                                <td>
-                                    <span class="status resolved-status">
-                                        Resolved
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-btn">
-                                        View
-                                    </button>
-                                </td>
-
-                            </tr>
 
                         </tbody>
 
@@ -1275,79 +1242,133 @@ td {
             </section>
 
 
-            <!-- Issue Details -->
-            <section class="issue-details" id="issue-details">
+            <!-- =========================
+                 ISSUE DETAILS
+            ========================= -->
+
+            <section
+                class="issue-details"
+                id="issue-details"
+            >
+
 
                 <div class="details-header">
 
+
                     <div>
-                        <p class="details-label">Issue Details</p>
-                        <h2>Broken Classroom Fan</h2>
-                        <span class="issue-id">#ISS-001</span>
+
+                        <p class="details-label">
+                            Issue Details
+                        </p>
+
+
+                        <h2 id="details-title"></h2>
+
+
+                        <span
+                            class="issue-id"
+                            id="details-issue-id"
+                        ></span>
+
                     </div>
+
 
                     <button class="close-details">
                         ×
                     </button>
+
 
                 </div>
 
 
                 <div class="details-content">
 
-                    <!-- Image -->
+
+                    <!-- ISSUE IMAGE -->
+
                     <div class="details-image">
-                        <span>Issue Image</span>
+
+                        <span>
+                            Issue Image
+                        </span>
+
                     </div>
 
 
-                    <!-- Information -->
+                    <!-- INFORMATION -->
+
                     <div class="issue-information">
+
 
                         <div class="info-row">
 
-                            <div>
-                                <span>Category</span>
-                                <strong>Electrical</strong>
-                            </div>
 
                             <div>
-                                <span>Location</span>
-                                <strong>Block A - Room 204</strong>
+
+                                <span>
+                                    Category
+                                </span>
+
+                                <strong></strong>
+
                             </div>
+
+
+                            <div>
+
+                                <span>
+                                    Location
+                                </span>
+
+                                <strong></strong>
+
+                            </div>
+
 
                         </div>
 
 
                         <div class="info-row">
 
-                            <div>
-                                <span>Reported By</span>
-                                <strong>Student Name</strong>
-                            </div>
 
                             <div>
-                                <span>Reported On</span>
-                                <strong>20 Sep 2026</strong>
+
+                                <span>
+                                    Reported By
+                                </span>
+
+                                <strong></strong>
+
                             </div>
+
+
+                            <div>
+
+                                <span>
+                                    Reported On
+                                </span>
+
+                                <strong></strong>
+
+                            </div>
+
 
                         </div>
 
 
                         <div class="description">
 
-                            <span>Description</span>
+                            <span>
+                                Description
+                            </span>
 
-                            <p>
-                                The ceiling fan in classroom 204 is not
-                                working properly. It has been making noise
-                                and stops running after a few minutes.
-                            </p>
+                            <p></p>
 
                         </div>
 
 
-                        <!-- Status -->
+                        <!-- UPDATE STATUS -->
+
                         <div class="update-section">
 
                             <label for="issue-status">
@@ -1373,7 +1394,8 @@ td {
                         </div>
 
 
-                        <!-- Response -->
+                        <!-- MANAGEMENT RESPONSE -->
+
                         <div class="response-section">
 
                             <label for="management-response">
@@ -1388,9 +1410,15 @@ td {
                         </div>
 
 
-                        <button class="update-btn" id="update-issue">
+                        <!-- UPDATE -->
+
+                        <button
+                            class="update-btn"
+                            id="update-issue"
+                        >
                             Update Issue
                         </button>
+
 
                     </div>
 
@@ -1398,11 +1426,19 @@ td {
 
             </section>
 
+
         </main>
 
     </div>
 
+
+    <!-- JAVASCRIPT -->
+
     <script src="../JS/register.js"></script>
 
+    <script src="../JS/managment.js"></script>
+
+
 </body>
+
 </html>
