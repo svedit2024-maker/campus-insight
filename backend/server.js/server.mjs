@@ -1,3 +1,4 @@
+
 import express from "express";
 import mongoose from "mongoose";
 import passport from "passport";
@@ -82,13 +83,6 @@ mongoose
     });
 
 // ======================================================
-// MIDDLEWARE
-// ======================================================
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// ======================================================
 // MULTER
 // ======================================================
 
@@ -100,9 +94,17 @@ const upload = multer({
     fileFilter: (req, file, cb) => {
 
         if (file.mimetype.startsWith("image/")) {
+
             cb(null, true);
+
         } else {
-            cb(new Error("Only image files are allowed"));
+
+            cb(
+                new Error(
+                    "Only image files are allowed"
+                )
+            );
+
         }
 
     }
@@ -113,9 +115,16 @@ const upload = multer({
 // ======================================================
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
+
+    cloud_name:
+        process.env.CLOUDINARY_CLOUD_NAME,
+
+    api_key:
+        process.env.CLOUDINARY_API_KEY,
+
+    api_secret:
+        process.env.CLOUDINARY_API_SECRET
+
 });
 
 // ======================================================
@@ -139,6 +148,7 @@ async function createManagementAccount() {
             );
 
             return;
+
         }
 
         const existingManagement =
@@ -153,6 +163,7 @@ async function createManagementAccount() {
             );
 
             return;
+
         }
 
         const hashedPassword =
@@ -163,7 +174,8 @@ async function createManagementAccount() {
 
         await User.create({
 
-            name: "Management",
+            name:
+                "Management",
 
             email:
                 email.toLowerCase(),
@@ -171,7 +183,8 @@ async function createManagementAccount() {
             password:
                 hashedPassword,
 
-            role: "management"
+            role:
+                "management"
 
         });
 
@@ -187,6 +200,7 @@ async function createManagementAccount() {
         );
 
     }
+
 }
 
 // ======================================================
@@ -249,7 +263,10 @@ app.post("/register", async (req, res) => {
 
         const existingUser =
             await User.findOne({
-                email: normalizedEmail
+
+                email:
+                    normalizedEmail
+
             });
 
         if (existingUser) {
@@ -301,7 +318,10 @@ app.post("/register", async (req, res) => {
                 );
 
                 return res.status(500).json({
-                    message: "Session error"
+
+                    message:
+                        "Session error"
+
                 });
 
             }
@@ -434,7 +454,10 @@ app.post("/login", async (req, res) => {
                 );
 
                 return res.status(500).json({
-                    message: "Session error"
+
+                    message:
+                        "Session error"
+
                 });
 
             }
@@ -550,7 +573,10 @@ app.post(
                     );
 
                     return res.status(500).json({
-                        message: "Session error"
+
+                        message:
+                            "Session error"
+
                     });
 
                 }
@@ -610,15 +636,32 @@ function requireLogin(req, res, next) {
 
 function requireStudent(req, res, next) {
 
-    console.log("========== ISSUE AUTH CHECK ==========");
-    console.log("Session:", req.session);
-    console.log("User ID:", req.session.userId);
-    console.log("Role:", req.session.role);
+    console.log(
+        "========== ISSUE AUTH CHECK =========="
+    );
+
+    console.log(
+        "Session:",
+        req.session
+    );
+
+    console.log(
+        "User ID:",
+        req.session.userId
+    );
+
+    console.log(
+        "Role:",
+        req.session.role
+    );
 
     if (!req.session.userId) {
 
         return res.status(401).json({
-            message: "Please login first"
+
+            message:
+                "Please login first"
+
         });
 
     }
@@ -626,12 +669,16 @@ function requireStudent(req, res, next) {
     if (req.session.role !== "student") {
 
         return res.status(403).json({
-            message: "Student access only"
+
+            message:
+                "Student access only"
+
         });
 
     }
 
     next();
+
 }
 
 // ======================================================
@@ -642,16 +689,22 @@ app.post(
     "/issues",
     requireStudent,
     upload.single("photo"),
+
     async (req, res) => {
 
         try {
 
-            console.log("========== ISSUE UPLOAD ==========");
+            console.log(
+                "========== ISSUE UPLOAD =========="
+            );
 
             const userId =
                 req.session.userId;
 
-            console.log("User:", userId);
+            console.log(
+                "User:",
+                userId
+            );
 
             const {
                 category,
@@ -674,6 +727,10 @@ app.post(
                 description
             );
 
+            // ==================================================
+            // VALIDATE ISSUE DATA
+            // ==================================================
+
             if (
                 !category ||
                 !location ||
@@ -689,88 +746,220 @@ app.post(
 
             }
 
-            let photoUrl = null;
+            // ==================================================
+            // IMAGE REQUIRED
+            // ==================================================
 
-            if (req.file) {
+            if (!req.file) {
 
-                console.log(
-                    "File exists:",
-                    true
+                return res.status(400).json({
+
+                    message:
+                        "Issue image is required"
+
+                });
+
+            }
+
+            console.log(
+                "File exists:",
+                true
+            );
+
+            console.log(
+                "File name:",
+                req.file.originalname
+            );
+
+            console.log(
+                "File type:",
+                req.file.mimetype
+            );
+
+            console.log(
+                "File size:",
+                req.file.size
+            );
+
+            // ==================================================
+            // SEND IMAGE TO ML BACKEND
+            // ==================================================
+
+            console.log(
+                "Sending image to ML backend..."
+            );
+
+            const formData =
+                new FormData();
+
+            const imageBlob =
+                new Blob(
+                    [
+                        req.file.buffer
+                    ],
+                    {
+                        type:
+                            req.file.mimetype
+                    }
                 );
 
-                console.log(
-                    "File name:",
-                    req.file.originalname
+            formData.append(
+                "file",
+                imageBlob,
+                req.file.originalname
+            );
+
+            const mlResponse =
+                await fetch(
+                    "http://127.0.0.1:8000/predict",
+                    {
+                        method:
+                            "POST",
+
+                        body:
+                            formData
+                    }
                 );
 
-                console.log(
-                    "File type:",
-                    req.file.mimetype
+            // ==================================================
+            // CHECK ML RESPONSE
+            // ==================================================
+
+            if (!mlResponse.ok) {
+
+                const mlError =
+                    await mlResponse.text();
+
+                console.error(
+                    "ML API ERROR:",
+                    mlError
                 );
 
+                return res.status(502).json({
+
+                    message:
+                        "ML prediction failed",
+
+                    error:
+                        mlError
+
+                });
+
+            }
+
+            const mlPrediction =
+                await mlResponse.json();
+
+            console.log(
+                "ML Prediction:",
+                mlPrediction
+            );
+
+            // ==================================================
+            // UNWANTED IMAGE
+            // ==================================================
+
+            if (
+                mlPrediction.result ===
+                "unwanted"
+            ) {
+
                 console.log(
-                    "File size:",
-                    req.file.size
+                    "Issue rejected by ML model"
                 );
 
-                console.log(
-                    "Uploading image to Cloudinary..."
-                );
+                return res.status(400).json({
 
-                const result =
-                    await new Promise(
-                        (resolve, reject) => {
+                    message:
+                        "The uploaded image was classified as unwanted.",
 
-                            const stream =
-                                cloudinary.uploader.upload_stream(
-                                    {
-                                        folder:
-                                            "issue-reports",
+                    prediction:
+                        mlPrediction.result,
 
-                                        resource_type:
-                                            "image"
-                                    },
+                    scores:
+                        mlPrediction.scores
 
-                                    (
-                                        error,
-                                        result
-                                    ) => {
+                });
 
-                                        if (error) {
+            }
 
-                                            reject(error);
+            // ==================================================
+            // MANUAL REVIEW
+            // ==================================================
 
-                                        } else {
-
-                                            resolve(result);
-
-                                        }
-
-                                    }
-                                );
-
-                            stream.end(
-                                req.file.buffer
-                            );
-
-                        }
-                    );
-
-                photoUrl =
-                    result.secure_url;
+            if (
+                mlPrediction.result ===
+                "manual_review"
+            ) {
 
                 console.log(
-                    "Cloudinary URL:",
-                    photoUrl
-                );
-
-            } else {
-
-                console.log(
-                    "No image uploaded"
+                    "ML classified image for manual review"
                 );
 
             }
+
+            // ==================================================
+            // CLOUDINARY UPLOAD
+            // ==================================================
+
+            console.log(
+                "Uploading image to Cloudinary..."
+            );
+
+            const cloudinaryResult =
+                await new Promise(
+                    (resolve, reject) => {
+
+                        const stream =
+                            cloudinary.uploader.upload_stream(
+                                {
+                                    folder:
+                                        "issue-reports",
+
+                                    resource_type:
+                                        "image"
+                                },
+
+                                (
+                                    error,
+                                    result
+                                ) => {
+
+                                    if (error) {
+
+                                        reject(
+                                            error
+                                        );
+
+                                    } else {
+
+                                        resolve(
+                                            result
+                                        );
+
+                                    }
+
+                                }
+                            );
+
+                        stream.end(
+                            req.file.buffer
+                        );
+
+                    }
+                );
+
+            const photoUrl =
+                cloudinaryResult.secure_url;
+
+            console.log(
+                "Cloudinary URL:",
+                photoUrl
+            );
+
+            // ==================================================
+            // CREATE ISSUE IN MONGODB
+            // ==================================================
 
             const issue =
                 await Issue.create({
@@ -797,10 +986,17 @@ app.post(
                 issue._id
             );
 
+            // ==================================================
+            // SUCCESS RESPONSE
+            // ==================================================
+
             return res.status(201).json({
 
                 message:
                     "Issue reported successfully",
+
+                prediction:
+                    mlPrediction,
 
                 issue
 
@@ -812,7 +1008,9 @@ app.post(
                 "========== ISSUE ERROR =========="
             );
 
-            console.error(error);
+            console.error(
+                error
+            );
 
             return res.status(500).json({
 
@@ -870,6 +1068,7 @@ function requireManagement(req, res, next) {
 app.get(
     "/management/check",
     requireManagement,
+
     (req, res) => {
 
         res.status(200).json({
@@ -892,6 +1091,7 @@ app.get(
 app.get(
     "/student/check",
     requireLogin,
+
     (req, res) => {
 
         if (
@@ -961,26 +1161,28 @@ app.get(
         req.session.role =
             "student";
 
-        req.session.save((sessionError) => {
+        req.session.save(
+            (sessionError) => {
 
-            if (sessionError) {
+                if (sessionError) {
 
-                console.error(
-                    "Google session save error:",
-                    sessionError
-                );
+                    console.error(
+                        "Google session save error:",
+                        sessionError
+                    );
 
-                return res.redirect(
-                    "/student/student_login.html"
+                    return res.redirect(
+                        "/student/student_login.html"
+                    );
+
+                }
+
+                res.redirect(
+                    "/student/student.html"
                 );
 
             }
-
-            res.redirect(
-                "/student/student.html"
-            );
-
-        });
+        );
 
     }
 );
@@ -1144,251 +1346,445 @@ passport.deserializeUser(
 
 app.post(
     "/logout",
+
     (req, res) => {
 
-        req.logout((logoutError) => {
+        req.logout(
+            (logoutError) => {
 
-            if (logoutError) {
+                if (logoutError) {
 
-                console.error(
-                    "Passport logout error:",
-                    logoutError
-                );
+                    console.error(
+                        "Passport logout error:",
+                        logoutError
+                    );
 
-            }
+                }
 
-            req.session.destroy(
-                (sessionError) => {
+                req.session.destroy(
+                    (sessionError) => {
 
-                    if (sessionError) {
+                        if (sessionError) {
 
-                        console.error(
-                            "Session destruction error:",
-                            sessionError
+                            console.error(
+                                "Session destruction error:",
+                                sessionError
+                            );
+
+                            return res.status(500).json({
+
+                                message:
+                                    "Logout failed"
+
+                            });
+
+                        }
+
+                        res.clearCookie(
+                            "connect.sid"
                         );
 
-                        return res.status(500).json({
+                        res.status(200).json({
 
                             message:
-                                "Logout failed"
+                                "Logout successful"
 
                         });
 
                     }
+                );
 
-                    res.clearCookie(
-                        "connect.sid"
-                    );
-
-                    res.status(200).json({
-
-                        message:
-                            "Logout successful"
-
-                    });
-
-                }
-            );
-
-        });
+            }
+        );
 
     }
 );
-app.get("/management/stats", requireManagement, async (req, res) => {
-    try {
-        const total = await Issue.countDocuments();
 
-        const pending = await Issue.countDocuments({
-            status: "Pending"
-        });
+// ======================================================
+// MANAGEMENT STATS
+// ======================================================
 
-        const inProgress = await Issue.countDocuments({
-            status: "In Progress"
-        });
+app.get(
+    "/management/stats",
+    requireManagement,
 
-        const resolved = await Issue.countDocuments({
-            status: "Resolved"
-        });
+    async (req, res) => {
 
-        res.status(200).json({
-            total,
-            pending,
-            inProgress,
-            resolved
-        });
+        try {
 
-    } catch (error) {
-        console.error("Management stats error:", error);
+            const total =
+                await Issue.countDocuments();
 
-        res.status(500).json({
-            message: "Failed to fetch statistics"
-        });
-    }
-});
-app.get("/management/issues", requireManagement, async (req, res) => {
-    try {
-        const issues = await Issue.find()
-            .populate("userId", "name email")
-            .sort({ createdAt: -1 });
+            const pending =
+                await Issue.countDocuments({
 
-        res.status(200).json({
-            issues
-        });
+                    status:
+                        "Pending"
 
-    } catch (error) {
-        console.error("Fetch management issues error:", error);
+                });
 
-        res.status(500).json({
-            message: "Failed to fetch issues"
-        });
-    }
-});
-app.patch("/management/issues/:id", requireManagement, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { status, managementResponse } = req.body;
+            const inProgress =
+                await Issue.countDocuments({
 
-        const allowedStatuses = [
-            "Pending",
-            "In Progress",
-            "Resolved"
-        ];
+                    status:
+                        "In Progress"
 
-        if (status && !allowedStatuses.includes(status)) {
-            return res.status(400).json({
-                message: "Invalid status"
+                });
+
+            const resolved =
+                await Issue.countDocuments({
+
+                    status:
+                        "Resolved"
+
+                });
+
+            res.status(200).json({
+
+                total,
+
+                pending,
+
+                inProgress,
+
+                resolved
+
             });
-        }
 
-        const issue = await Issue.findById(id);
+        } catch (error) {
 
-        if (!issue) {
-            return res.status(404).json({
-                message: "Issue not found"
+            console.error(
+                "Management stats error:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Failed to fetch statistics"
+
             });
+
         }
 
-        if (status !== undefined) {
-            issue.status = status;
-        }
-
-        if (managementResponse !== undefined) {
-            issue.managementResponse = managementResponse;
-        }
-
-        await issue.save();
-
-        res.status(200).json({
-            message: "Issue updated successfully",
-            issue
-        });
-
-    } catch (error) {
-        console.error("Update issue error:", error);
-
-        res.status(500).json({
-            message: "Failed to update issue"
-        });
     }
-});
-app.get("/student/issues", requireStudent, async (req, res) => {
-    try {
+);
 
-        const issues = await Issue.find({
-            userId: req.session.userId
-        }).sort({ createdAt: -1 });
+// ======================================================
+// MANAGEMENT ISSUES
+// ======================================================
 
-        res.status(200).json({
-            issues
-        });
+app.get(
+    "/management/issues",
+    requireManagement,
 
-    } catch (error) {
+    async (req, res) => {
 
-        console.error("Fetch student issues error:", error);
+        try {
 
-        res.status(500).json({
-            message: "Failed to fetch issues"
-        });
+            const issues =
+                await Issue.find()
+                    .populate(
+                        "userId",
+                        "name email"
+                    )
+                    .sort({
+                        createdAt:
+                            -1
+                    });
+
+            res.status(200).json({
+
+                issues
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Fetch management issues error:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Failed to fetch issues"
+
+            });
+
+        }
+
     }
-});
-// ==========================================
+);
+
+// ======================================================
+// UPDATE MANAGEMENT ISSUE
+// ======================================================
+
+app.patch(
+    "/management/issues/:id",
+    requireManagement,
+
+    async (req, res) => {
+
+        try {
+
+            const {
+                id
+            } = req.params;
+
+            const {
+                status,
+                managementResponse
+            } = req.body;
+
+            const allowedStatuses = [
+
+                "Pending",
+
+                "In Progress",
+
+                "Resolved"
+
+            ];
+
+            if (
+                status &&
+                !allowedStatuses.includes(status)
+            ) {
+
+                return res.status(400).json({
+
+                    message:
+                        "Invalid status"
+
+                });
+
+            }
+
+            const issue =
+                await Issue.findById(id);
+
+            if (!issue) {
+
+                return res.status(404).json({
+
+                    message:
+                        "Issue not found"
+
+                });
+
+            }
+
+            if (
+                status !== undefined
+            ) {
+
+                issue.status =
+                    status;
+
+            }
+
+            if (
+                managementResponse !== undefined
+            ) {
+
+                issue.managementResponse =
+                    managementResponse;
+
+            }
+
+            await issue.save();
+
+            res.status(200).json({
+
+                message:
+                    "Issue updated successfully",
+
+                issue
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Update issue error:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Failed to update issue"
+
+            });
+
+        }
+
+    }
+);
+
+// ======================================================
+// STUDENT ISSUES
+// ======================================================
+
+app.get(
+    "/student/issues",
+    requireStudent,
+
+    async (req, res) => {
+
+        try {
+
+            const issues =
+                await Issue.find({
+
+                    userId:
+                        req.session.userId
+
+                }).sort({
+
+                    createdAt:
+                        -1
+
+                });
+
+            res.status(200).json({
+
+                issues
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Fetch student issues error:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Failed to fetch issues"
+
+            });
+
+        }
+
+    }
+);
+
+// ======================================================
 // ALL ISSUES - MANAGEMENT
-// ==========================================
-// ==========================================
-// ALL ISSUES - MANAGEMENT
-// ==========================================
+// ======================================================
 
-app.get("/management/all-issues", requireManagement, async (req, res) => {
+app.get(
+    "/management/all-issues",
+    requireManagement,
 
-    try {
+    async (req, res) => {
 
-        const issues = await Issue.find({})
-            .populate("userId", "name email")
-            .select(
-                "_id userId category location description photo status managementResponse createdAt updatedAt"
-            )
-            .sort({ createdAt: -1 });
+        try {
 
+            const issues =
+                await Issue.find({})
+                    .populate(
+                        "userId",
+                        "name email"
+                    )
+                    .select(
+                        "_id userId category location description photo status managementResponse createdAt updatedAt"
+                    )
+                    .sort({
+                        createdAt:
+                            -1
+                    });
 
-        const formattedIssues = issues.map(issue => ({
+            const formattedIssues =
+                issues.map(
+                    issue => ({
 
-            _id: issue._id,
+                        _id:
+                            issue._id,
 
-            category: issue.category,
+                        category:
+                            issue.category,
 
-            location: issue.location,
+                        location:
+                            issue.location,
 
-            description: issue.description,
+                        description:
+                            issue.description,
 
-            photoUrl: issue.photo || null,
+                        photoUrl:
+                            issue.photo ||
+                            null,
 
-            status: issue.status,
+                        status:
+                            issue.status,
 
-            managementResponse:
-                issue.managementResponse || "",
+                        managementResponse:
+                            issue.managementResponse ||
+                            "",
 
-            createdAt: issue.createdAt,
+                        createdAt:
+                            issue.createdAt,
 
-            updatedAt: issue.updatedAt,
+                        updatedAt:
+                            issue.updatedAt,
 
-            userId: issue.userId
-                ? {
-                    _id: issue.userId._id,
-                    name: issue.userId.name,
-                    email: issue.userId.email
-                }
-                : null
+                        userId:
+                            issue.userId
+                                ? {
 
-        }));
+                                    _id:
+                                        issue.userId._id,
 
+                                    name:
+                                        issue.userId.name,
 
-        res.status(200).json({
+                                    email:
+                                        issue.userId.email
 
-            success: true,
+                                }
+                                : null
 
-            issues: formattedIssues
+                    })
+                );
 
-        });
+            res.status(200).json({
 
+                success:
+                    true,
 
-    } catch (error) {
+                issues:
+                    formattedIssues
 
-        console.error(
-            "ALL ISSUES ERROR:",
-            error
-        );
+            });
 
-        res.status(500).json({
+        } catch (error) {
 
-            success: false,
+            console.error(
+                "ALL ISSUES ERROR:",
+                error
+            );
 
-            message: "Failed to fetch all issues"
+            res.status(500).json({
 
-        });
+                success:
+                    false,
+
+                message:
+                    "Failed to fetch all issues"
+
+            });
+
+        }
 
     }
+);
 
-});
 // ======================================================
 // SERVER
 // ======================================================
@@ -1397,6 +1793,7 @@ const PORT = 3000;
 
 app.listen(
     PORT,
+
     () => {
 
         console.log(
