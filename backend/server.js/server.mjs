@@ -1965,6 +1965,11 @@ app.use(
     }
 );
 
+app.get("/test", (req, res) => {
+    res.json({
+        message: "Campus Insight Express is working"
+    });
+});
 
 // ======================================================
 // SERVER
