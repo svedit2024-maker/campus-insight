@@ -1,4 +1,3 @@
-
 import express from "express";
 import mongoose from "mongoose";
 import passport from "passport";
@@ -14,25 +13,62 @@ import { v2 as cloudinary } from "cloudinary";
 import User from "../schema/schema_std.mjs";
 import Issue from "../schema/items.mjs";
 
+
+// ======================================================
+// ENVIRONMENT
+// ======================================================
+
+dotenv.config();
+
+
+// ======================================================
+// EXPRESS APP
+// ======================================================
+
 const app = express();
+
+
+// ======================================================
+// PATH
+// ======================================================
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config();
+
+// ======================================================
+// VERCEL PROXY
+// ======================================================
+
+app.set("trust proxy", 1);
+
 
 // ======================================================
 // MIDDLEWARE
 // ======================================================
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
+
+
+// ======================================================
+// STATIC FRONTEND
+// ======================================================
 
 app.use(
     express.static(
-        path.join(__dirname, "../../frontend")
+        path.join(
+            __dirname,
+            "../../frontend"
+        )
     )
 );
+
 
 // ======================================================
 // SESSION
@@ -41,24 +77,38 @@ app.use(
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
+
         resave: false,
+
         saveUninitialized: false,
 
         cookie: {
             httpOnly: true,
-            secure: false,
+
+            secure:
+                process.env.NODE_ENV === "production",
+
             sameSite: "lax",
-            maxAge: 1000 * 60 * 60 * 24
+
+            maxAge:
+                1000 * 60 * 60 * 24
         }
     })
 );
+
 
 // ======================================================
 // PASSPORT
 // ======================================================
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(
+    passport.initialize()
+);
+
+app.use(
+    passport.session()
+);
+
 
 // ======================================================
 // MONGODB
@@ -68,7 +118,9 @@ mongoose
     .connect(process.env.MONGO_URI)
     .then(async () => {
 
-        console.log("MongoDB connected");
+        console.log(
+            "MongoDB connected"
+        );
 
         await createManagementAccount();
 
@@ -82,33 +134,47 @@ mongoose
 
     });
 
+
 // ======================================================
 // MULTER
 // ======================================================
 
-const storage = multer.memoryStorage();
+const storage =
+    multer.memoryStorage();
 
-const upload = multer({
-    storage,
+const upload =
+    multer({
 
-    fileFilter: (req, file, cb) => {
+        storage,
 
-        if (file.mimetype.startsWith("image/")) {
+        fileFilter:
+            (req, file, cb) => {
 
-            cb(null, true);
+                if (
+                    file.mimetype.startsWith(
+                        "image/"
+                    )
+                ) {
 
-        } else {
+                    cb(
+                        null,
+                        true
+                    );
 
-            cb(
-                new Error(
-                    "Only image files are allowed"
-                )
-            );
+                } else {
 
-        }
+                    cb(
+                        new Error(
+                            "Only image files are allowed"
+                        )
+                    );
 
-    }
-});
+                }
+
+            }
+
+    });
+
 
 // ======================================================
 // CLOUDINARY
@@ -127,6 +193,7 @@ cloudinary.config({
 
 });
 
+
 // ======================================================
 // CREATE MANAGEMENT ACCOUNT
 // ======================================================
@@ -141,22 +208,42 @@ async function createManagementAccount() {
         const password =
             process.env.MANAGEMENT_PASSWORD;
 
-        if (!email || !password) {
+
+        if (
+            !email ||
+            !password
+        ) {
 
             console.log(
-                "Management credentials are missing from .env"
+                "Management credentials are missing"
             );
 
             return;
 
         }
 
+
+        const normalizedEmail =
+            email
+                .toLowerCase()
+                .trim();
+
+
         const existingManagement =
             await User.findOne({
-                email: email.toLowerCase()
+
+                email:
+                    normalizedEmail,
+
+                role:
+                    "management"
+
             });
 
-        if (existingManagement) {
+
+        if (
+            existingManagement
+        ) {
 
             console.log(
                 "Management account already exists"
@@ -166,11 +253,13 @@ async function createManagementAccount() {
 
         }
 
+
         const hashedPassword =
             await bcrypt.hash(
                 password,
                 12
             );
+
 
         await User.create({
 
@@ -178,7 +267,7 @@ async function createManagementAccount() {
                 "Management",
 
             email:
-                email.toLowerCase(),
+                normalizedEmail,
 
             password:
                 hashedPassword,
@@ -187,6 +276,7 @@ async function createManagementAccount() {
                 "management"
 
         });
+
 
         console.log(
             "Management account created successfully"
@@ -203,291 +293,356 @@ async function createManagementAccount() {
 
 }
 
+
 // ======================================================
 // HOME
 // ======================================================
 
-app.get("/", (req, res) => {
+app.get(
+    "/",
+    (req, res) => {
 
-    res.sendFile(
-        path.join(
-            __dirname,
-            "../../frontend/student/student_login.html"
-        )
-    );
+        res.sendFile(
 
-});
+            path.join(
+                __dirname,
+                "../../frontend/student/student_login.html"
+            )
+
+        );
+
+    }
+);
+
 
 // ======================================================
 // STUDENT REGISTER PAGE
 // ======================================================
 
-app.get("/register", (req, res) => {
+app.get(
+    "/register",
+    (req, res) => {
 
-    res.sendFile(
-        path.join(
-            __dirname,
-            "../../frontend/student/student_register.html"
-        )
-    );
+        res.sendFile(
 
-});
+            path.join(
+                __dirname,
+                "../../frontend/student/student_register.html"
+            )
+
+        );
+
+    }
+);
+
 
 // ======================================================
 // STUDENT REGISTER
 // ======================================================
 
-app.post("/register", async (req, res) => {
+app.post(
+    "/register",
+    async (req, res) => {
 
-    try {
+        try {
 
-        const {
-            name,
-            email,
-            password
-        } = req.body;
-
-        if (!name || !email || !password) {
-
-            return res.status(400).json({
-
-                message:
-                    "Name, email and password are required"
-
-            });
-
-        }
-
-        const normalizedEmail =
-            email.toLowerCase().trim();
-
-        const existingUser =
-            await User.findOne({
-
-                email:
-                    normalizedEmail
-
-            });
-
-        if (existingUser) {
-
-            return res.status(409).json({
-
-                message:
-                    "Email already registered"
-
-            });
-
-        }
-
-        const hashedPassword =
-            await bcrypt.hash(
-                password,
-                12
-            );
-
-        const user =
-            await User.create({
-
+            const {
                 name,
+                email,
+                password
+            } = req.body;
 
-                email:
-                    normalizedEmail,
 
-                password:
-                    hashedPassword,
+            if (
+                !name ||
+                !email ||
+                !password
+            ) {
 
-                role:
-                    "student"
-
-            });
-
-        req.session.userId =
-            user._id;
-
-        req.session.role =
-            "student";
-
-        req.session.save((sessionError) => {
-
-            if (sessionError) {
-
-                console.error(
-                    "Registration session save error:",
-                    sessionError
-                );
-
-                return res.status(500).json({
+                return res.status(400).json({
 
                     message:
-                        "Session error"
+                        "Name, email and password are required"
 
                 });
 
             }
 
-            res.status(201).json({
+
+            const normalizedEmail =
+                email
+                    .toLowerCase()
+                    .trim();
+
+
+            const existingUser =
+                await User.findOne({
+
+                    email:
+                        normalizedEmail
+
+                });
+
+
+            if (
+                existingUser
+            ) {
+
+                return res.status(409).json({
+
+                    message:
+                        "Email already registered"
+
+                });
+
+            }
+
+
+            const hashedPassword =
+                await bcrypt.hash(
+                    password,
+                    12
+                );
+
+
+            const user =
+                await User.create({
+
+                    name:
+                        name.trim(),
+
+                    email:
+                        normalizedEmail,
+
+                    password:
+                        hashedPassword,
+
+                    role:
+                        "student"
+
+                });
+
+
+            req.session.userId =
+                user._id;
+
+            req.session.role =
+                "student";
+
+
+            req.session.save(
+                (sessionError) => {
+
+                    if (
+                        sessionError
+                    ) {
+
+                        console.error(
+                            "Registration session save error:",
+                            sessionError
+                        );
+
+                        return res.status(500).json({
+
+                            message:
+                                "Session error"
+
+                        });
+
+                    }
+
+
+                    return res.status(201).json({
+
+                        message:
+                            "Registration successful"
+
+                    });
+
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Registration error:",
+                error
+            );
+
+            return res.status(500).json({
 
                 message:
-                    "Registration successful"
+                    "Server error"
 
             });
 
-        });
-
-    } catch (error) {
-
-        console.error(
-            "Registration error:",
-            error
-        );
-
-        res.status(500).json({
-
-            message:
-                "Server error"
-
-        });
+        }
 
     }
+);
 
-});
 
 // ======================================================
 // STUDENT LOGIN
 // ======================================================
 
-app.post("/login", async (req, res) => {
+app.post(
+    "/login",
+    async (req, res) => {
 
-    try {
+        try {
 
-        const {
-            email,
-            password
-        } = req.body;
+            const {
+                email,
+                password
+            } = req.body;
 
-        if (!email || !password) {
 
-            return res.status(400).json({
+            if (
+                !email ||
+                !password
+            ) {
 
-                message:
-                    "Email and password are required"
-
-            });
-
-        }
-
-        const normalizedEmail =
-            email.toLowerCase().trim();
-
-        const user =
-            await User.findOne({
-
-                email:
-                    normalizedEmail
-
-            });
-
-        if (!user) {
-
-            return res.status(401).json({
-
-                message:
-                    "Invalid email or password"
-
-            });
-
-        }
-
-        if (user.role !== "student") {
-
-            return res.status(403).json({
-
-                message:
-                    "Please use Management Login"
-
-            });
-
-        }
-
-        if (!user.password) {
-
-            return res.status(401).json({
-
-                message:
-                    "This account uses Google Login"
-
-            });
-
-        }
-
-        const passwordMatch =
-            await bcrypt.compare(
-                password,
-                user.password
-            );
-
-        if (!passwordMatch) {
-
-            return res.status(401).json({
-
-                message:
-                    "Invalid email or password"
-
-            });
-
-        }
-
-        req.session.userId =
-            user._id;
-
-        req.session.role =
-            "student";
-
-        req.session.save((sessionError) => {
-
-            if (sessionError) {
-
-                console.error(
-                    "Login session save error:",
-                    sessionError
-                );
-
-                return res.status(500).json({
+                return res.status(400).json({
 
                     message:
-                        "Session error"
+                        "Email and password are required"
 
                 });
 
             }
 
-            res.status(200).json({
+
+            const normalizedEmail =
+                email
+                    .toLowerCase()
+                    .trim();
+
+
+            const user =
+                await User.findOne({
+
+                    email:
+                        normalizedEmail
+
+                });
+
+
+            if (!user) {
+
+                return res.status(401).json({
+
+                    message:
+                        "Invalid email or password"
+
+                });
+
+            }
+
+
+            if (
+                user.role !== "student"
+            ) {
+
+                return res.status(403).json({
+
+                    message:
+                        "Please use Management Login"
+
+                });
+
+            }
+
+
+            if (!user.password) {
+
+                return res.status(401).json({
+
+                    message:
+                        "This account uses Google Login"
+
+                });
+
+            }
+
+
+            const passwordMatch =
+                await bcrypt.compare(
+                    password,
+                    user.password
+                );
+
+
+            if (!passwordMatch) {
+
+                return res.status(401).json({
+
+                    message:
+                        "Invalid email or password"
+
+                });
+
+            }
+
+
+            req.session.userId =
+                user._id;
+
+            req.session.role =
+                "student";
+
+
+            req.session.save(
+                (sessionError) => {
+
+                    if (
+                        sessionError
+                    ) {
+
+                        console.error(
+                            "Login session save error:",
+                            sessionError
+                        );
+
+                        return res.status(500).json({
+
+                            message:
+                                "Session error"
+
+                        });
+
+                    }
+
+
+                    return res.status(200).json({
+
+                        message:
+                            "Login successful"
+
+                    });
+
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+            return res.status(500).json({
 
                 message:
-                    "Login successful"
+                    "Server error"
 
             });
 
-        });
-
-    } catch (error) {
-
-        console.error(
-            "Login error:",
-            error
-        );
-
-        res.status(500).json({
-
-            message:
-                "Server error"
-
-        });
+        }
 
     }
+);
 
-});
 
 // ======================================================
 // MANAGEMENT LOGIN
@@ -504,7 +659,11 @@ app.post(
                 password
             } = req.body;
 
-            if (!email || !password) {
+
+            if (
+                !email ||
+                !password
+            ) {
 
                 return res.status(400).json({
 
@@ -515,8 +674,12 @@ app.post(
 
             }
 
+
             const normalizedEmail =
-                email.toLowerCase().trim();
+                email
+                    .toLowerCase()
+                    .trim();
+
 
             const user =
                 await User.findOne({
@@ -529,6 +692,7 @@ app.post(
 
                 });
 
+
             if (!user) {
 
                 return res.status(401).json({
@@ -540,11 +704,25 @@ app.post(
 
             }
 
+
+            if (!user.password) {
+
+                return res.status(401).json({
+
+                    message:
+                        "Management password is not configured"
+
+                });
+
+            }
+
+
             const passwordMatch =
                 await bcrypt.compare(
                     password,
                     user.password
                 );
+
 
             if (!passwordMatch) {
 
@@ -557,38 +735,45 @@ app.post(
 
             }
 
+
             req.session.userId =
                 user._id;
 
             req.session.role =
                 "management";
 
-            req.session.save((sessionError) => {
 
-                if (sessionError) {
+            req.session.save(
+                (sessionError) => {
 
-                    console.error(
-                        "Management session save error:",
+                    if (
                         sessionError
-                    );
+                    ) {
 
-                    return res.status(500).json({
+                        console.error(
+                            "Management session save error:",
+                            sessionError
+                        );
+
+                        return res.status(500).json({
+
+                            message:
+                                "Session error"
+
+                        });
+
+                    }
+
+
+                    return res.status(200).json({
 
                         message:
-                            "Session error"
+                            "Management login successful"
 
                     });
 
                 }
-
-                res.status(200).json({
-
-                    message:
-                        "Management login successful"
-
-                });
-
-            });
+            );
 
         } catch (error) {
 
@@ -597,7 +782,7 @@ app.post(
                 error
             );
 
-            res.status(500).json({
+            return res.status(500).json({
 
                 message:
                     "Server error"
@@ -609,13 +794,20 @@ app.post(
     }
 );
 
+
 // ======================================================
-// AUTHENTICATION MIDDLEWARE
+// GENERAL LOGIN CHECK
 // ======================================================
 
-function requireLogin(req, res, next) {
+function requireLogin(
+    req,
+    res,
+    next
+) {
 
-    if (!req.session.userId) {
+    if (
+        !req.session.userId
+    ) {
 
         return res.status(401).json({
 
@@ -630,32 +822,20 @@ function requireLogin(req, res, next) {
 
 }
 
+
 // ======================================================
 // STUDENT AUTHENTICATION
 // ======================================================
 
-function requireStudent(req, res, next) {
+function requireStudent(
+    req,
+    res,
+    next
+) {
 
-    console.log(
-        "========== ISSUE AUTH CHECK =========="
-    );
-
-    console.log(
-        "Session:",
-        req.session
-    );
-
-    console.log(
-        "User ID:",
-        req.session.userId
-    );
-
-    console.log(
-        "Role:",
-        req.session.role
-    );
-
-    if (!req.session.userId) {
+    if (
+        !req.session.userId
+    ) {
 
         return res.status(401).json({
 
@@ -666,7 +846,11 @@ function requireStudent(req, res, next) {
 
     }
 
-    if (req.session.role !== "student") {
+
+    if (
+        req.session.role !==
+        "student"
+    ) {
 
         return res.status(403).json({
 
@@ -677,9 +861,55 @@ function requireStudent(req, res, next) {
 
     }
 
+
     next();
 
 }
+
+
+// ======================================================
+// MANAGEMENT AUTHENTICATION
+// ======================================================
+
+function requireManagement(
+    req,
+    res,
+    next
+) {
+
+    if (
+        !req.session.userId
+    ) {
+
+        return res.status(401).json({
+
+            message:
+                "Please login first"
+
+        });
+
+    }
+
+
+    if (
+        req.session.role !==
+        "management"
+    ) {
+
+        return res.status(403).json({
+
+            message:
+                "Management access only"
+
+        });
+
+    }
+
+
+    next();
+
+}
+
 
 // ======================================================
 // POST ISSUE
@@ -698,19 +928,22 @@ app.post(
                 "========== ISSUE UPLOAD =========="
             );
 
+
             const userId =
                 req.session.userId;
 
-            console.log(
-                "User:",
-                userId
-            );
 
             const {
                 category,
                 location,
                 description
             } = req.body;
+
+
+            console.log(
+                "User:",
+                userId
+            );
 
             console.log(
                 "Category:",
@@ -726,6 +959,7 @@ app.post(
                 "Description:",
                 description
             );
+
 
             // ==================================================
             // VALIDATE ISSUE DATA
@@ -746,6 +980,7 @@ app.post(
 
             }
 
+
             // ==================================================
             // IMAGE REQUIRED
             // ==================================================
@@ -761,13 +996,9 @@ app.post(
 
             }
 
-            console.log(
-                "File exists:",
-                true
-            );
 
             console.log(
-                "File name:",
+                "File:",
                 req.file.originalname
             );
 
@@ -781,122 +1012,6 @@ app.post(
                 req.file.size
             );
 
-            // ==================================================
-            // SEND IMAGE TO ML BACKEND
-            // ==================================================
-
-            console.log(
-                "Sending image to ML backend..."
-            );
-
-            const formData =
-                new FormData();
-
-            const imageBlob =
-                new Blob(
-                    [
-                        req.file.buffer
-                    ],
-                    {
-                        type:
-                            req.file.mimetype
-                    }
-                );
-
-            formData.append(
-                "file",
-                imageBlob,
-                req.file.originalname
-            );
-
-            const mlResponse =
-                await fetch(
-                    `${process.env.ML_API_URL}/predict`,
-                    {
-                        method:
-                            "POST",
-
-                        body:
-                            formData
-                    }
-                );
-
-            // ==================================================
-            // CHECK ML RESPONSE
-            // ==================================================
-
-            if (!mlResponse.ok) {
-
-                const mlError =
-                    await mlResponse.text();
-
-                console.error(
-                    "ML API ERROR:",
-                    mlError
-                );
-
-                return res.status(502).json({
-
-                    message:
-                        "ML prediction failed",
-
-                    error:
-                        mlError
-
-                });
-
-            }
-
-            const mlPrediction =
-                await mlResponse.json();
-
-            console.log(
-                "ML Prediction:",
-                mlPrediction
-            );
-
-            // ==================================================
-            // UNWANTED IMAGE
-            // ==================================================
-
-            if (
-                mlPrediction.result ===
-                "unwanted"
-            ) {
-
-                console.log(
-                    "Issue rejected by ML model"
-                );
-
-                return res.status(400).json({
-
-                    message:
-                        "The uploaded image was classified as unwanted.",
-
-                    prediction:
-                        mlPrediction.result,
-
-                    scores:
-                        mlPrediction.scores
-
-                });
-
-            }
-
-            // ==================================================
-            // MANUAL REVIEW
-            // ==================================================
-
-            if (
-                mlPrediction.result ===
-                "manual_review"
-            ) {
-
-                console.log(
-                    "ML classified image for manual review"
-                );
-
-            }
 
             // ==================================================
             // CLOUDINARY UPLOAD
@@ -906,41 +1021,49 @@ app.post(
                 "Uploading image to Cloudinary..."
             );
 
+
             const cloudinaryResult =
                 await new Promise(
                     (resolve, reject) => {
 
                         const stream =
-                            cloudinary.uploader.upload_stream(
-                                {
-                                    folder:
-                                        "issue-reports",
+                            cloudinary
+                                .uploader
+                                .upload_stream(
 
-                                    resource_type:
-                                        "image"
-                                },
+                                    {
+                                        folder:
+                                            "issue-reports",
 
-                                (
-                                    error,
-                                    result
-                                ) => {
+                                        resource_type:
+                                            "image"
+                                    },
 
-                                    if (error) {
+                                    (
+                                        error,
+                                        result
+                                    ) => {
 
-                                        reject(
+                                        if (
                                             error
-                                        );
+                                        ) {
 
-                                    } else {
+                                            reject(
+                                                error
+                                            );
 
-                                        resolve(
-                                            result
-                                        );
+                                        } else {
+
+                                            resolve(
+                                                result
+                                            );
+
+                                        }
 
                                     }
 
-                                }
-                            );
+                                );
+
 
                         stream.end(
                             req.file.buffer
@@ -949,13 +1072,16 @@ app.post(
                     }
                 );
 
+
             const photoUrl =
                 cloudinaryResult.secure_url;
+
 
             console.log(
                 "Cloudinary URL:",
                 photoUrl
             );
+
 
             // ==================================================
             // CREATE ISSUE IN MONGODB
@@ -981,10 +1107,12 @@ app.post(
 
                 });
 
+
             console.log(
                 "Issue created:",
                 issue._id
             );
+
 
             // ==================================================
             // SUCCESS RESPONSE
@@ -994,9 +1122,6 @@ app.post(
 
                 message:
                     "Issue reported successfully",
-
-                prediction:
-                    mlPrediction,
 
                 issue
 
@@ -1011,6 +1136,7 @@ app.post(
             console.error(
                 error
             );
+
 
             return res.status(500).json({
 
@@ -1027,39 +1153,6 @@ app.post(
     }
 );
 
-// ======================================================
-// MANAGEMENT AUTHENTICATION
-// ======================================================
-
-function requireManagement(req, res, next) {
-
-    if (!req.session.userId) {
-
-        return res.status(401).json({
-
-            message:
-                "Please login first"
-
-        });
-
-    }
-
-    if (
-        req.session.role !== "management"
-    ) {
-
-        return res.status(403).json({
-
-            message:
-                "Management access only"
-
-        });
-
-    }
-
-    next();
-
-}
 
 // ======================================================
 // MANAGEMENT SESSION CHECK
@@ -1071,7 +1164,7 @@ app.get(
 
     (req, res) => {
 
-        res.status(200).json({
+        return res.status(200).json({
 
             authenticated:
                 true,
@@ -1084,6 +1177,7 @@ app.get(
     }
 );
 
+
 // ======================================================
 // STUDENT SESSION CHECK
 // ======================================================
@@ -1095,7 +1189,8 @@ app.get(
     (req, res) => {
 
         if (
-            req.session.role !== "student"
+            req.session.role !==
+            "student"
         ) {
 
             return res.status(403).json({
@@ -1107,7 +1202,8 @@ app.get(
 
         }
 
-        res.status(200).json({
+
+        return res.status(200).json({
 
             authenticated:
                 true,
@@ -1119,6 +1215,7 @@ app.get(
 
     }
 );
+
 
 // ======================================================
 // GOOGLE LOGIN
@@ -1137,6 +1234,7 @@ app.get(
         }
     )
 );
+
 
 // ======================================================
 // GOOGLE CALLBACK
@@ -1161,10 +1259,13 @@ app.get(
         req.session.role =
             "student";
 
+
         req.session.save(
             (sessionError) => {
 
-                if (sessionError) {
+                if (
+                    sessionError
+                ) {
 
                     console.error(
                         "Google session save error:",
@@ -1177,7 +1278,8 @@ app.get(
 
                 }
 
-                res.redirect(
+
+                return res.redirect(
                     "/student/student.html"
                 );
 
@@ -1187,9 +1289,14 @@ app.get(
     }
 );
 
+
 // ======================================================
 // GOOGLE STRATEGY
 // ======================================================
+
+const googleCallbackURL =
+    `${process.env.BASE_URL || "http://localhost:3000"}/auth/google/callback`;
+
 
 passport.use(
 
@@ -1202,9 +1309,12 @@ passport.use(
 
             clientSecret:
                 process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/auth/google/callback"
+
+            callbackURL:
+                googleCallbackURL
 
         },
+
 
         async (
             accessToken,
@@ -1216,8 +1326,11 @@ passport.use(
             try {
 
                 const googleEmail =
-                    profile.emails[0].value
+                    profile
+                        .emails[0]
+                        .value
                         .toLowerCase();
+
 
                 let user =
                     await User.findOne({
@@ -1226,6 +1339,7 @@ passport.use(
                             profile.id
 
                     });
+
 
                 if (!user) {
 
@@ -1238,6 +1352,7 @@ passport.use(
                         });
 
                 }
+
 
                 if (!user) {
 
@@ -1258,9 +1373,9 @@ passport.use(
 
                         });
 
-                }
-
-                else if (!user.googleId) {
+                } else if (
+                    !user.googleId
+                ) {
 
                     user.googleId =
                         profile.id;
@@ -1268,6 +1383,7 @@ passport.use(
                     await user.save();
 
                 }
+
 
                 return done(
                     null,
@@ -1294,6 +1410,7 @@ passport.use(
 
 );
 
+
 // ======================================================
 // PASSPORT SERIALIZE
 // ======================================================
@@ -1309,6 +1426,7 @@ passport.serializeUser(
     }
 );
 
+
 // ======================================================
 // PASSPORT DESERIALIZE
 // ======================================================
@@ -1320,6 +1438,7 @@ passport.deserializeUser(
 
             const user =
                 await User.findById(id);
+
 
             done(
                 null,
@@ -1338,6 +1457,7 @@ passport.deserializeUser(
     }
 );
 
+
 // ======================================================
 // LOGOUT
 // ======================================================
@@ -1350,7 +1470,9 @@ app.post(
         req.logout(
             (logoutError) => {
 
-                if (logoutError) {
+                if (
+                    logoutError
+                ) {
 
                     console.error(
                         "Passport logout error:",
@@ -1359,10 +1481,13 @@ app.post(
 
                 }
 
+
                 req.session.destroy(
                     (sessionError) => {
 
-                        if (sessionError) {
+                        if (
+                            sessionError
+                        ) {
 
                             console.error(
                                 "Session destruction error:",
@@ -1378,11 +1503,13 @@ app.post(
 
                         }
 
+
                         res.clearCookie(
                             "connect.sid"
                         );
 
-                        res.status(200).json({
+
+                        return res.status(200).json({
 
                             message:
                                 "Logout successful"
@@ -1397,6 +1524,7 @@ app.post(
 
     }
 );
+
 
 // ======================================================
 // MANAGEMENT STATS
@@ -1413,6 +1541,7 @@ app.get(
             const total =
                 await Issue.countDocuments();
 
+
             const pending =
                 await Issue.countDocuments({
 
@@ -1420,6 +1549,7 @@ app.get(
                         "Pending"
 
                 });
+
 
             const inProgress =
                 await Issue.countDocuments({
@@ -1429,6 +1559,7 @@ app.get(
 
                 });
 
+
             const resolved =
                 await Issue.countDocuments({
 
@@ -1437,7 +1568,8 @@ app.get(
 
                 });
 
-            res.status(200).json({
+
+            return res.status(200).json({
 
                 total,
 
@@ -1456,7 +1588,8 @@ app.get(
                 error
             );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 message:
                     "Failed to fetch statistics"
@@ -1467,6 +1600,7 @@ app.get(
 
     }
 );
+
 
 // ======================================================
 // MANAGEMENT ISSUES
@@ -1487,11 +1621,14 @@ app.get(
                         "name email"
                     )
                     .sort({
+
                         createdAt:
                             -1
+
                     });
 
-            res.status(200).json({
+
+            return res.status(200).json({
 
                 issues
 
@@ -1504,7 +1641,8 @@ app.get(
                 error
             );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 message:
                     "Failed to fetch issues"
@@ -1515,6 +1653,7 @@ app.get(
 
     }
 );
+
 
 // ======================================================
 // UPDATE MANAGEMENT ISSUE
@@ -1532,10 +1671,12 @@ app.patch(
                 id
             } = req.params;
 
+
             const {
                 status,
                 managementResponse
             } = req.body;
+
 
             const allowedStatuses = [
 
@@ -1547,9 +1688,12 @@ app.patch(
 
             ];
 
+
             if (
                 status &&
-                !allowedStatuses.includes(status)
+                !allowedStatuses.includes(
+                    status
+                )
             ) {
 
                 return res.status(400).json({
@@ -1561,8 +1705,10 @@ app.patch(
 
             }
 
+
             const issue =
                 await Issue.findById(id);
+
 
             if (!issue) {
 
@@ -1575,6 +1721,7 @@ app.patch(
 
             }
 
+
             if (
                 status !== undefined
             ) {
@@ -1583,6 +1730,7 @@ app.patch(
                     status;
 
             }
+
 
             if (
                 managementResponse !== undefined
@@ -1593,9 +1741,11 @@ app.patch(
 
             }
 
+
             await issue.save();
 
-            res.status(200).json({
+
+            return res.status(200).json({
 
                 message:
                     "Issue updated successfully",
@@ -1611,7 +1761,8 @@ app.patch(
                 error
             );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 message:
                     "Failed to update issue"
@@ -1622,6 +1773,7 @@ app.patch(
 
     }
 );
+
 
 // ======================================================
 // STUDENT ISSUES
@@ -1641,14 +1793,16 @@ app.get(
                     userId:
                         req.session.userId
 
-                }).sort({
+                })
+                .sort({
 
                     createdAt:
                         -1
 
                 });
 
-            res.status(200).json({
+
+            return res.status(200).json({
 
                 issues
 
@@ -1661,7 +1815,8 @@ app.get(
                 error
             );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 message:
                     "Failed to fetch issues"
@@ -1672,6 +1827,7 @@ app.get(
 
     }
 );
+
 
 // ======================================================
 // ALL ISSUES - MANAGEMENT
@@ -1695,13 +1851,16 @@ app.get(
                         "_id userId category location description photo status managementResponse createdAt updatedAt"
                     )
                     .sort({
+
                         createdAt:
                             -1
+
                     });
+
 
             const formattedIssues =
                 issues.map(
-                    issue => ({
+                    (issue) => ({
 
                         _id:
                             issue._id,
@@ -1751,7 +1910,8 @@ app.get(
                     })
                 );
 
-            res.status(200).json({
+
+            return res.status(200).json({
 
                 success:
                     true,
@@ -1768,7 +1928,8 @@ app.get(
                 error
             );
 
-            res.status(500).json({
+
+            return res.status(500).json({
 
                 success:
                     false,
@@ -1783,9 +1944,27 @@ app.get(
     }
 );
 
+
 // ======================================================
-// SERVER
+// 404 HANDLER
 // ======================================================
+
+app.use(
+    (req, res) => {
+
+        return res.status(404).json({
+
+            message:
+                "Route not found",
+
+            path:
+                req.path
+
+        });
+
+    }
+);
+
 
 // ======================================================
 // SERVER
