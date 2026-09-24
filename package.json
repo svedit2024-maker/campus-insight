@@ -25,6 +25,7 @@
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
+    "mongodb": "^7.6.0",
     "mongoose": "^9.10.1",
     "multer": "^2.4.0",
     "passport": "^0.7.0",
